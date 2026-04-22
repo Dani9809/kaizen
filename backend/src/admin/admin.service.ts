@@ -56,6 +56,73 @@ export class AdminService {
         status: true,
         tier: true,
         type: true,
+        group_memberships: {
+          include: {
+            group: true,
+            role: true,
+          }
+        },
+        user_inventory: {
+          include: {
+            item: true
+          }
+        },
+        user_pet_details: {
+          include: {
+            user_pet: {
+              include: {
+                pet: {
+                  include: {
+                    species: {
+                      include: {
+                        category: true,
+                        level: true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        reflections: {
+          include: {
+            mood: true
+          },
+          orderBy: { created_at: 'desc' },
+          take: 20
+        },
+        user_task_templates: {
+          include: {
+            schedules: true,
+            instances: {
+              include: { status: true },
+              orderBy: { due_date: 'desc' },
+              take: 10
+            }
+          }
+        },
+        user_quests: {
+          include: {
+            quest: true
+          },
+          orderBy: { assigned_date: 'desc' },
+          take: 10
+        },
+        sent_nudges: {
+          include: {
+            receiver: { select: { username: true } }
+          },
+          orderBy: { created_at: 'desc' },
+          take: 5
+        },
+        received_nudges: {
+          include: {
+            sender: { select: { username: true } }
+          },
+          orderBy: { created_at: 'desc' },
+          take: 5
+        }
       },
     });
   }
@@ -154,6 +221,14 @@ export class AdminService {
         }
       },
       orderBy: { group_created: 'desc' }
+    });
+  }
+
+  async updateGroup(id: number, data: any) {
+    // Force Prisma client reload
+    return this.prisma.group.update({
+      where: { group_id: id },
+      data
     });
   }
 

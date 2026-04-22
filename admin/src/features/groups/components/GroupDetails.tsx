@@ -23,7 +23,7 @@ import {
   Trash2
 } from "lucide-react";
 import { toast } from "sonner";
-import { fetchGroupDetails } from "../api/groups";
+import { fetchGroupDetails, updateGroup } from "../api/groups";
 import { GroupDetails as IGroupDetails } from "../types";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -76,6 +76,18 @@ export default function GroupDetails({ id }: GroupDetailsProps) {
   const openEditMember = (member: any) => {
     setSelectedMember(member);
     setIsMemberModalOpen(true);
+  };
+
+  const handleTogglePrivacy = async () => {
+    if (!group) return;
+    const newStatus = !group.isSharable;
+    try {
+      await updateGroup(id, { isSharable: newStatus });
+      setGroup({ ...group, isSharable: newStatus });
+      toast.success(`Squad is now ${newStatus ? 'Public' : 'Private'}`);
+    } catch (err) {
+      toast.error("Failed to update privacy status");
+    }
   };
 
   const tabs = [
@@ -140,25 +152,41 @@ export default function GroupDetails({ id }: GroupDetailsProps) {
                 {group.isSharable ? "Public" : "Private"}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground font-medium flex items-center gap-1.5 mt-0.5">
-              <Calendar className="w-3 h-3" /> Created on {new Date(group.group_created).toLocaleDateString()}
+            <p className="text-xs text-muted-foreground font-medium flex flex-wrap items-center gap-x-4 gap-y-1 mt-0.5">
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-3 h-3" /> Created on {new Date(group.group_created).toLocaleDateString()}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-3 h-3" /> Updated on {group.group_updated ? new Date(group.group_updated).toLocaleDateString() : new Date(group.group_created).toLocaleDateString()}
+              </span>
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="gradient" size="sm" className="font-bold text-[10px] uppercase">Edit Squad</Button>
-          <Button variant="danger" size="sm" className="font-bold text-[10px] uppercase">Disband</Button>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button variant="gradient" size="sm" className="flex-1 sm:flex-none font-bold text-[10px] uppercase">Edit Squad</Button>
+          <Button 
+            variant={group.isSharable ? "secondary" : "primary"} 
+            size="sm" 
+            className="flex-1 sm:flex-none font-bold text-[10px] uppercase gap-2"
+            onClick={handleTogglePrivacy}
+          >
+            {group.isSharable ? (
+              <>Set Private</>
+            ) : (
+              <>Set Public</>
+            )}
+          </Button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 p-1 bg-secondary/5 rounded-2xl w-fit border border-secondary/10 overflow-x-auto custom-scrollbar no-scrollbar">
+      <div className="flex items-center gap-1 p-1 bg-secondary/5 rounded-2xl w-full sm:w-fit border border-secondary/10 overflow-x-auto custom-scrollbar no-scrollbar">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => handleTabChange(tab.id)}
             className={`
-              flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap
+              flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap flex-1 sm:flex-none
               ${activeTab === tab.id 
                 ? "bg-white dark:bg-card text-secondary shadow-sm ring-1 ring-secondary/10" 
                 : "text-muted-foreground hover:text-foreground hover:bg-secondary/5"}
@@ -187,7 +215,7 @@ export default function GroupDetails({ id }: GroupDetailsProps) {
                 </div>
               </div>
             </Card>
-            <Card className="p-6">
+            <Card className="p-4 sm:p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Total Members</p>
@@ -200,7 +228,7 @@ export default function GroupDetails({ id }: GroupDetailsProps) {
                 </div>
               </div>
             </Card>
-            <Card className="p-6">
+            <Card className="p-4 sm:p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Longest Streak</p>
@@ -213,7 +241,7 @@ export default function GroupDetails({ id }: GroupDetailsProps) {
                 </div>
               </div>
             </Card>
-            <Card className="p-6">
+            <Card className="p-4 sm:p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Last Freeze</p>
@@ -234,21 +262,22 @@ export default function GroupDetails({ id }: GroupDetailsProps) {
 
         {activeTab === "members" && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <h3 className="text-xs font-black uppercase tracking-widest text-foreground flex items-center gap-2">
                 <Users className="w-4 h-4 text-secondary" /> Squad Roster
               </h3>
               <Button 
                 variant="gradient" 
                 size="sm" 
-                className="text-[10px] uppercase font-black px-4"
+                className="w-full sm:w-auto text-[10px] uppercase font-black px-4 py-2.5"
                 onClick={() => setIsMemberModalOpen(true)}
               >
                 <Users className="w-3.5 h-3.5 mr-2" /> Manage Roster
               </Button>
             </div>
             <Card className="overflow-hidden">
-              <table className="w-full text-left">
+              <div className="overflow-x-auto custom-scrollbar">
+                <table className="w-full text-left min-w-[600px]">
                 <thead>
                   <tr className="bg-secondary/5 border-b border-secondary/10">
                     <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Player</th>
@@ -281,7 +310,8 @@ export default function GroupDetails({ id }: GroupDetailsProps) {
                     </tr>
                   ))}
                 </tbody>
-              </table>
+                </table>
+              </div>
             </Card>
           </div>
         )}
@@ -296,11 +326,11 @@ export default function GroupDetails({ id }: GroupDetailsProps) {
 
         {activeTab === "tasks" && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <h3 className="text-xs font-black uppercase tracking-widest text-foreground flex items-center gap-2">
                 <Target className="w-4 h-4 text-secondary" /> Group Tasks
               </h3>
-              <Button variant="gradient" size="sm" className="text-[10px] uppercase font-black">+ New Task</Button>
+              <Button variant="gradient" size="sm" className="w-full sm:w-auto text-[10px] uppercase font-black">+ New Task</Button>
             </div>
             <div className="space-y-8">
               {group.task_templates.map((template) => (
@@ -356,11 +386,11 @@ export default function GroupDetails({ id }: GroupDetailsProps) {
 
         {activeTab === "quests" && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <h3 className="text-xs font-black uppercase tracking-widest text-foreground flex items-center gap-2">
                 <Award className="w-4 h-4 text-secondary" /> Active Quests
               </h3>
-              <Button variant="gradient" size="sm" className="text-[10px] uppercase font-black">+ Assign Quest</Button>
+              <Button variant="gradient" size="sm" className="w-full sm:w-auto text-[10px] uppercase font-black">+ Assign Quest</Button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {group.quest_instances.map((instance) => (

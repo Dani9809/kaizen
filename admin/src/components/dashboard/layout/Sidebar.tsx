@@ -45,6 +45,9 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
   if (activeView.startsWith("squads")) {
     activeView = "squads";
   }
+  if (activeView.startsWith("users")) {
+    activeView = "users";
+  }
 
   const [gameMenuOpen, setGameMenuOpen] = React.useState(false);
 

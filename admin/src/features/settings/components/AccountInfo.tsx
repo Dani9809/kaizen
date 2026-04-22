@@ -136,7 +136,7 @@ export const AccountInfo = ({ onBack, admin: basicAdmin }: AccountInfoProps) => 
         {/* Profile Card */}
         <div className="lg:col-span-1">
           <Card className="h-full overflow-hidden" hover={false}>
-            <div className="p-8 flex flex-col items-center text-center space-y-4">
+            <div className="p-4 sm:p-8 flex flex-col items-center text-center space-y-4">
               <div className="relative">
                 <div className="w-24 h-24 bg-secondary/10 rounded-[2rem] flex items-center justify-center border-2 border-secondary/20 shadow-inner">
                   <User className="w-12 h-12 text-secondary" />
@@ -175,7 +175,7 @@ export const AccountInfo = ({ onBack, admin: basicAdmin }: AccountInfoProps) => 
         {/* Detailed Info / Form */}
         <div className="lg:col-span-2">
           <Card className="h-full overflow-hidden" hover={false}>
-            <div className="p-8">
+            <div className="p-4 sm:p-8">
               {isEditing ? (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

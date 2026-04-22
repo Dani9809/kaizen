@@ -10,6 +10,8 @@ import GroupDetails from "@/features/groups/components/GroupDetails";
 import GameOverview from "@/features/gamification/components/GameOverview";
 import GameManagement from "@/features/gamification/components/GameManagement";
 
+import PlayerDetails from "@/features/players/components/PlayerDetails";
+
 function DashboardContent() {
   const searchParams = useSearchParams();
   const view = searchParams.get("view") || "overview";
@@ -20,6 +22,14 @@ function DashboardContent() {
       return <GroupDetails id={parts[1]} />;
     }
     return <GroupManagement />;
+  }
+
+  if (view.startsWith("users")) {
+    const parts = view.split("/id=");
+    if (parts.length > 1) {
+      return <PlayerDetails id={parts[1]} />;
+    }
+    return <UserManagement />;
   }
 
   if (view === "game") {
@@ -34,8 +44,6 @@ function DashboardContent() {
   switch (view) {
     case "overview":
       return <Overview />;
-    case "users":
-      return <UserManagement />;
     case "settings":
       return <Settings />;
     default:

@@ -6,6 +6,7 @@ export interface Group {
   longest_streak: number;
   isSharable: boolean;
   group_created: string;
+  group_updated: string;
   _count?: {
     members: number;
   };

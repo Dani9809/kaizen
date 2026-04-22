@@ -87,6 +87,7 @@ export default function GroupManagement() {
             <thead>
               <tr className="bg-secondary/5 border-b border-secondary/10">
                 <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Squad Name</th>
+                <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Privacy</th>
                 <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Members</th>
                 <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Current Streak</th>
                 <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Longest Streak</th>
@@ -106,15 +107,13 @@ export default function GroupManagement() {
                       <div className="w-9 h-9 bg-secondary/10 rounded-xl flex items-center justify-center border border-secondary/20 group-hover:scale-110 transition-transform">
                         <Target className="w-5 h-5 text-secondary" />
                       </div>
-                      <div>
-                        <p className="text-sm font-bold text-foreground">{group.group_name}</p>
-                        <div className="flex items-center gap-2">
-                          <Badge variant={group.isSharable ? "success" : "neutral"} className="text-[9px] px-1 py-0 h-auto">
-                            {group.isSharable ? "Public" : "Private"}
-                          </Badge>
-                        </div>
-                      </div>
+                      <p className="text-sm font-bold text-foreground">{group.group_name}</p>
                     </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <Badge variant={group.isSharable ? "success" : "neutral"} className="text-[9px] px-2 py-0.5 h-auto uppercase font-black tracking-tighter">
+                      {group.isSharable ? "Public" : "Private"}
+                    </Badge>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1.5 text-muted-foreground">

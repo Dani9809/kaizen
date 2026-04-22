@@ -86,7 +86,7 @@ export const AccountSecurity = ({ onBack, admin }: AccountSecurityProps) => {
       </div>
 
       <Card className="w-full overflow-hidden" hover={false}>
-        <div className="p-8 space-y-8">
+        <div className="p-4 sm:p-8 space-y-8">
           <div className="p-6 bg-amber-500/5 rounded-2xl border border-amber-500/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <div className="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center border border-amber-500/20 shrink-0">
               <Shield className="w-6 h-6 text-amber-500" />

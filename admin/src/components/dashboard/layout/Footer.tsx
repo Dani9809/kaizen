@@ -9,7 +9,7 @@ export const Footer = () => {
 
   return (
     <footer className="mt-auto py-8 border-t border-secondary/10">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="w-8 h-8 rounded-lg bg-secondary/5 border border-secondary/10 flex items-center justify-center">
             <Shield className="w-4 h-4 text-secondary/60" />

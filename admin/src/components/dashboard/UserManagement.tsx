@@ -22,7 +22,6 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import NewPlayerModal from "./NewPlayerModal";
-import PlayerDetailsModal from "./PlayerDetailsModal";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 
 export default function UserManagement() {
@@ -33,8 +32,6 @@ export default function UserManagement() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [activePlayerId, setActivePlayerId] = useState<number | null>(null);
   const [confirmConfig, setConfirmConfig] = useState<{
     isOpen: boolean;
     title: string;
@@ -54,19 +51,11 @@ export default function UserManagement() {
   // Sync modal state with URL
   useEffect(() => {
     const action = searchParams.get("action");
-    const id = searchParams.get("id");
     
     if (action === "add-player") {
       setIsModalOpen(true);
-      setIsViewModalOpen(false);
-    } else if (action === "view-player" && id) {
-      setIsViewModalOpen(true);
-      setIsModalOpen(false);
-      setActivePlayerId(Number(id));
     } else {
       setIsModalOpen(false);
-      setIsViewModalOpen(false);
-      setActivePlayerId(null);
     }
   }, [searchParams]);
 
@@ -78,10 +67,7 @@ export default function UserManagement() {
   };
 
   const openViewModal = (id: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("action", "view-player");
-    params.set("id", String(id));
-    router.replace(`?${params.toString()}`, { scroll: false });
+    router.push(`/dashboard?view=users/id=${id}`, { scroll: false });
   };
 
   const closeModal = () => {
@@ -92,10 +78,7 @@ export default function UserManagement() {
   };
 
   const closeModalView = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("action");
-    params.delete("id");
-    router.replace(`?${params.toString()}`, { scroll: false });
+    router.push(`/dashboard?view=users`, { scroll: false });
   };
 
   const fetchUsers = useCallback(async () => {
@@ -197,13 +180,6 @@ export default function UserManagement() {
         isOpen={isModalOpen} 
         onClose={closeModal}
         onSuccess={fetchUsers}
-      />
-
-      <PlayerDetailsModal
-        isOpen={isViewModalOpen}
-        onClose={closeModalView}
-        onSuccess={fetchUsers}
-        playerId={activePlayerId}
       />
 
       <ConfirmationModal

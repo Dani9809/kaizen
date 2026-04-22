@@ -15,3 +15,10 @@ export const createGroup = async (data: any): Promise<Group> => {
     body: JSON.stringify(data),
   });
 };
+
+export const updateGroup = async (id: number | string, data: any): Promise<Group> => {
+  return apiFetch(`/admin/groups/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+};

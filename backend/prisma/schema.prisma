@@ -89,6 +89,7 @@ model Group {
   longest_streak       Int                  @default(0)
   isSharable           Boolean              @default(true)
   group_created        DateTime             @default(now())
+  group_updated        DateTime             @default(now()) @updatedAt
   
   members              GroupMember[]
   quest_instances      GroupQuestInstance[]

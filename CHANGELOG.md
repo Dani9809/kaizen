@@ -8,6 +8,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.1.6] - 2026-04-23
+
+### Added
+- **Comprehensive Player Details Page**: Replaced the player management modal with a dedicated, tab-based detailed page accessible via `/dashboard?view=users/id=[ID]`.
+- **Expanded Player Analytics**: Updated the backend `getUserDetails` API to fetch all related player data including squads, personal tasks, quests, inventory, pets, and reflection logs.
+- **Player Tab Navigation**: Implemented a responsive tab system for player profiles (Overview, Tasks, Quests, Squads, Inventory, Reflections, Security).
+- **Deep-Linked Tab State**: Integrated URL query parameters (`&tab=...`) for player details to persist UI state across refreshes and direct links.
+- **Administrative Security Suite**: Moved critical account actions (Force Password Reset, Account Suspension) into a dedicated Security tab within the player profile.
+
+### Changed
+- **User Base Navigation**: Updated the "User Base" table to navigate to the new detailed page instead of opening a modal.
+- **Sidebar State Management**: Refined the sidebar's active state logic to correctly highlight the "User Base" category when viewing individual player profiles.
+
+### Fixed
+- **Button Type Safety**: Resolved TypeScript errors in `PlayerDetails.tsx` by correcting invalid size props on UI components.
+- **Layout Responsiveness**: Improved the squad and player details header layouts for better mobile viewing.
+
+---
 ## [0.1.5] - 2026-04-23
 
 ### Added

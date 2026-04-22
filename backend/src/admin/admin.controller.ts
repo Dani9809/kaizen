@@ -70,6 +70,14 @@ export class AdminController {
     return this.adminService.getGroupDetails(id);
   }
 
+  @Patch('groups/:id')
+  async updateGroup(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: any,
+  ) {
+    return this.adminService.updateGroup(id, dto);
+  }
+
   @Post('groups')
   async createGroup(@Body() dto: CreateGroupDto) {
     return this.adminService.createGroup(dto);

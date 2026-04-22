@@ -138,7 +138,7 @@ export default function Settings() {
           <h3 className="text-[10px] font-black text-red-500 uppercase tracking-[0.2em] ml-1">Danger Zone</h3>
           <Card className="border-red-500/20 dark:border-red-500/10 overflow-hidden" hover={false}>
             <div className="divide-y divide-red-500/10">
-              <div className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-500/20">
                     <UserX className="w-6 h-6 text-red-500" />
@@ -157,7 +157,7 @@ export default function Settings() {
                 </Button>
               </div>
 
-              <div className="p-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-red-500/[0.02]">
+              <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-red-500/[0.02]">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-foreground/5 rounded-2xl flex items-center justify-center border border-foreground/10">
                     <LogOut className="w-6 h-6 text-foreground/60" />
@@ -206,7 +206,7 @@ interface SettingsCardProps {
 const SettingsCard = ({ icon: Icon, title, description, onClick, badge, disabled }: SettingsCardProps) => (
   <Card 
     onClick={disabled ? undefined : onClick}
-    className={`p-5 flex items-center gap-4 transition-all group ${disabled ? "opacity-60 grayscale cursor-not-allowed" : "cursor-pointer hover:border-secondary/30 hover:bg-secondary/5"}`}
+    className={`p-4 sm:p-5 flex items-center gap-4 transition-all group ${disabled ? "opacity-60 grayscale cursor-not-allowed" : "cursor-pointer hover:border-secondary/30 hover:bg-secondary/5"}`}
   >
     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border transition-colors ${disabled ? "bg-muted border-muted" : "bg-secondary/10 border-secondary/20 group-hover:bg-secondary group-hover:text-white"}`}>
       <Icon className="w-6 h-6" />
