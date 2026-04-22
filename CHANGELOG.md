@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.0.2] - 2026-04-22
+
+### Added
+- **Backend Infrastructure**: Implemented `PrismaModule` and `PrismaService` using `@prisma/adapter-pg` for improved PostgreSQL driver compatibility.
+- **Database Seeding**: Created a comprehensive `seed.ts` script to populate lookup tables including Account Statuses, Subscription Tiers, Roles, and Task Statuses.
+- **Global API Configuration**: Enabled CORS and global `ValidationPipe` in NestJS for secure and validated frontend communication.
+
+### Changed
+- **Prisma Configuration**: Updated `prisma.config.ts` to support automated database seeding and optimized connection handling.
+
+---
+
 ## [0.0.1] - 2026-04-22
 
 ### Added
