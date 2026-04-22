@@ -22,15 +22,15 @@
 }
 
 :root {
-  --background: #f0fdfc;
+  --background:  #f1fcfb;
   --foreground: #1a2a2a;
-  --card-bg: #ffffff;
+  --card-bg: #cff8f4;
   --border-color: rgba(104, 224, 220, 0.1);
 }
 
 .dark {
   --background: #121212;
-  --foreground: #e5eef0;
+  --foreground: #f1fcfb;
   --card-bg: #1e1e1e;
   --border-color: rgba(255, 255, 255, 0.05);
   
@@ -90,6 +90,17 @@
   
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-secondary/30 rounded-full hover:bg-secondary/50 transition-colors;
+  }
+
+  /* Hide number input arrows */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 }
 

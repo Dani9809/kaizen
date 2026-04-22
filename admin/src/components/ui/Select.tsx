@@ -1,21 +1,23 @@
-import React from "react";
-import { LucideIcon } from "lucide-react";
+"use client";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+import React from "react";
+import { LucideIcon, ChevronDown } from "lucide-react";
+
+interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   icon?: LucideIcon;
   label?: string;
+  options: { value: string | number; label: string }[];
   containerClassName?: string;
-  rightElement?: React.ReactNode;
 }
 
-export const Input = ({
+export const Select = ({
   icon: Icon,
   label,
+  options,
   containerClassName = "",
   className = "",
-  rightElement,
   ...props
-}: InputProps) => {
+}: SelectProps) => {
   return (
     <div className={`space-y-1.5 ${containerClassName}`}>
       {label && (
@@ -27,20 +29,21 @@ export const Input = ({
         {Icon && (
           <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30 group-focus-within:text-secondary transition-colors pointer-events-none" />
         )}
-        <input
+        <select
           className={`
-            w-full ${Icon ? "pl-10" : "px-4"} ${rightElement ? "pr-12" : "pr-4"} py-2.5 bg-white dark:bg-card border border-secondary/20 dark:border-white/5 rounded-xl text-sm 
+            w-full ${Icon ? "pl-10" : "px-4"} pr-10 py-2.5 bg-white dark:bg-card border border-secondary/20 dark:border-white/5 rounded-xl text-sm appearance-none
             focus:outline-none focus:ring-2 focus:ring-secondary/20 dark:focus:ring-secondary/10 focus:border-secondary transition-all
-            placeholder:text-foreground/20 dark:placeholder:text-foreground/10
             ${className}
           `}
           {...props}
-        />
-        {rightElement && (
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
-            {rightElement}
-          </div>
-        )}
+        >
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20 pointer-events-none group-focus-within:text-secondary transition-colors" />
       </div>
     </div>
   );

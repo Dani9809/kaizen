@@ -122,11 +122,6 @@ export const Header = ({ admin, onMenuClick }: HeaderProps) => {
                           >
                             <option.icon className="w-4 h-4" />
                             <span className="text-[10px] font-bold uppercase tracking-wide">{option.label}</span>
-                            {theme === option.id && (
-                              <div className="absolute top-1 right-1">
-                                <Check className="w-2.5 h-2.5" />
-                              </div>
-                            )}
                           </button>
                         ))}
                       </div>

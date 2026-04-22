@@ -8,6 +8,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.1.2] - 2026-04-22
+
+### Added
+- **Safety Confirmation Workflow**: Implemented a reusable `ConfirmationModal` for critical administrative actions (Suspend, Delete, Terminate) to prevent accidental data loss.
+- **Enhanced Audit Metrics**: Integrated detailed `Joined` and `Updated` timestamps into player profiles, featuring full date/time strings synced directly with the database.
+- **Dynamic Action States**: Added logic to the administrative console to detect and display "Suspended" status, disabling redundant actions for better UX.
+
+### Changed
+- **Player Details Overhaul**: Refactored `PlayerDetailsModal` into a high-density, single-column stacked layout for superior data readability on both mobile and desktop.
+- **Terminology Update**: Rebranded "Terminate" to "Suspend" across the administrative dashboard to better align with platform policy.
+- **UI Density Optimization**: Improved modal spacing and padding (`p-4 sm:p-6`) to maximize screen real estate for administrative tasks.
+- **Color Palette Refinement**: Updated `globals.css` with a curated "Kaizen Teal" palette and improved card background contrast for better visual hierarchy.
+- **Badge Visibility**: Optimized the "PRO TIER" and status badges to ensure high contrast and readability in Light Mode.
+
+### Fixed
+- **JSX Compilation Error**: Resolved a structural error in the admin modal where multiple parent elements were incorrectly nested.
+- **Data Field Mapping**: Fixed a bug where join and update dates were not displaying by correctly mapping to `account_created` and `account_updated` schema fields.
+- **Icon Redundancy**: Cleaned up the appearance dropdown by removing unnecessary checkmark icons for a cleaner, minimalist aesthetic.
+
+---
 ## [0.1.1] - 2026-04-22
 
 ### Added
