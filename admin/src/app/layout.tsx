@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -28,10 +29,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} ${openSans.variable} font-body antialiased bg-[#f8ffff] text-[#1a2a2a]`}
+        className={`${poppins.variable} ${openSans.variable} font-body antialiased`}
       >
-        <Toaster position="top-right" reverseOrder={false} />
-        {children}
+        <ThemeProvider>
+          <Toaster position="top-right" reverseOrder={false} />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { 
   Users, 
   Target, 
-  CheckCircle, 
   TrendingUp,
-  ArrowUpRight,
-  ArrowDownRight,
   Zap,
-  Activity
+  Activity,
+  CheckCircle
 } from "lucide-react";
+import { apiFetch } from "@/lib/api";
+import { Card, CardContent } from "@/components/ui/Card";
 
 export default function Overview() {
   const [stats, setStats] = useState<any>(null);
@@ -19,17 +19,10 @@ export default function Overview() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem("admin_token");
-        const apiHost = typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}:3000` : 'http://localhost:3000';
-        const response = await fetch(`${apiHost}/admin/dashboard/stats`, {
-          headers: { "Authorization": `Bearer ${token}` }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setStats(data);
-        }
+        const data = await apiFetch("/admin/dashboard/stats");
+        setStats(data);
       } catch (err) {
-        // Silent fail for stats, or could add toast
+        // Silent fail for stats
       } finally {
         setLoading(false);
       }
@@ -60,7 +53,7 @@ export default function Overview() {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((stat) => (
-          <div key={stat.name} className="bg-white p-4 rounded-2xl border border-secondary/10 hover:border-secondary/30 transition-all hover:-translate-y-1 group relative overflow-hidden">
+          <Card key={stat.name} className="p-4 group relative overflow-hidden">
             <div className="flex items-start justify-between relative z-10">
               <div className={`p-2 rounded-xl ${stat.bg} ${stat.color}`}>
                 <stat.icon className="w-5 h-5" />
@@ -77,13 +70,13 @@ export default function Overview() {
             </div>
             {/* Background Accent */}
             <div className={`absolute -right-4 -bottom-4 w-16 h-16 ${stat.bg} rounded-full blur-2xl opacity-50`} />
-          </div>
+          </Card>
         ))}
       </div>
 
       {/* Main Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        <div className="lg:col-span-3 bg-white p-6 rounded-3xl border border-secondary/10 shadow-sm">
+        <Card className="lg:col-span-3 p-6" hover={false}>
           <div className="flex items-center justify-between mb-8">
             <h3 className="text-sm font-black text-foreground font-heading uppercase tracking-widest flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-secondary" /> User Engagement
@@ -96,7 +89,7 @@ export default function Overview() {
           </div>
           <div className="h-48 flex items-end justify-between gap-1.5">
             {[40, 70, 45, 90, 65, 80, 50, 95, 60, 75, 40, 85, 30, 60, 45, 70, 55, 90, 65, 80].map((h, i) => (
-              <div key={i} className="flex-1 group relative">
+              <div key={i} className="flex-1 group relative h-full flex items-end">
                 <div 
                   className="w-full bg-secondary/10 rounded-t-sm transition-all group-hover:bg-secondary group-hover:shadow-[0_0_12px_rgba(104,224,220,0.5)] cursor-pointer" 
                   style={{ height: `${h}%` }}
@@ -107,9 +100,9 @@ export default function Overview() {
           <div className="flex justify-between mt-4 text-[10px] text-foreground/30 font-bold uppercase">
             <span>Monday</span><span>Wednesday</span><span>Friday</span><span>Sunday</span>
           </div>
-        </div>
+        </Card>
 
-        <div className="lg:col-span-2 bg-white p-6 rounded-3xl border border-secondary/10 shadow-sm">
+        <Card className="lg:col-span-2 p-6" hover={false}>
           <h3 className="text-sm font-black text-foreground font-heading uppercase tracking-widest flex items-center gap-2 mb-8">
             <CheckCircle className="w-4 h-4 text-secondary" /> Completion Metrics
           </h3>
@@ -136,7 +129,7 @@ export default function Overview() {
               </div>
             ))}
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

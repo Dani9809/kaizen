@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { 
   Search, 
   Filter, 
@@ -10,56 +10,44 @@ import {
   ShieldAlert,
   UserCheck,
   Ban,
-  Clock,
   Mail,
-  Zap,
-  ChevronDown
+  Zap
 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { apiFetch } from "@/lib/api";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { Input } from "@/components/ui/Input";
 
 export default function UserManagement() {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     try {
-      const token = localStorage.getItem("admin_token");
-      const apiHost = typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}:3000` : 'http://localhost:3000';
-      const response = await fetch(`${apiHost}/admin/users`, {
-        headers: { "Authorization": `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data);
-      }
+      const data = await apiFetch("/admin/users");
+      setUsers(data);
     } catch (err) {
       toast.error("Failed to fetch players");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   const handleStatusUpdate = async (accountId: number, statusId: number) => {
     try {
-      const token = localStorage.getItem("admin_token");
-      const apiHost = typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}:3000` : 'http://localhost:3000';
-      const response = await fetch(`${apiHost}/admin/users/${accountId}/status`, {
+      await apiFetch(`/admin/users/${accountId}/status`, {
         method: "PATCH",
-        headers: { 
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
         body: JSON.stringify({ status_id: statusId })
       });
-      if (response.ok) {
-        toast.success("Player status updated");
-        fetchUsers();
-      }
+      toast.success("Player status updated");
+      fetchUsers();
     } catch (err) {
       toast.error("Status update failed");
     }
@@ -74,28 +62,25 @@ export default function UserManagement() {
     <div className="space-y-4 animate-in fade-in duration-500">
       {/* Search & Actions */}
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-        <div className="relative w-full sm:max-w-xs group">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30 group-focus-within:text-secondary transition-colors" />
-          <input
-            type="text"
-            placeholder="Find player..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-white border border-secondary/20 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all"
-          />
-        </div>
+        <Input
+          icon={Search}
+          placeholder="Find player..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          containerClassName="w-full sm:max-w-xs"
+        />
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-white border border-secondary/20 rounded-xl text-xs font-bold text-foreground/60 hover:bg-secondary/5 transition-all">
+          <Button variant="primary" size="md" className="flex-1 sm:flex-none gap-2">
             <Filter className="w-3.5 h-3.5" /> Filter
-          </button>
-          <button className="flex-1 sm:flex-none px-4 py-2 gamified-gradient text-white rounded-xl text-xs font-black shadow-lg shadow-secondary/20 hover:scale-105 active:scale-95 transition-all">
+          </Button>
+          <Button variant="gradient" size="md" className="flex-1 sm:flex-none uppercase font-black">
             + NEW PLAYER
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* User Table */}
-      <div className="bg-white rounded-3xl border border-secondary/10 shadow-sm overflow-hidden">
+      <Card className="overflow-hidden" hover={false}>
         <div className="overflow-x-auto custom-scrollbar">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -136,15 +121,12 @@ export default function UserManagement() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`
-                      inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider
-                      ${user.status?.account_status_name === 'Active' 
-                        ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' 
-                        : 'bg-red-50 text-red-600 border border-red-100'}
-                    `}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${user.status?.account_status_name === 'Active' ? 'bg-emerald-500' : 'bg-red-500'}`} />
+                    <Badge 
+                      variant={user.status?.account_status_name === 'Active' ? 'success' : 'danger'} 
+                      dot
+                    >
                       {user.status?.account_status_name}
-                    </span>
+                    </Badge>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1.5">
@@ -158,15 +140,15 @@ export default function UserManagement() {
                     <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button 
                         onClick={() => handleStatusUpdate(user.account_id, user.account_status_id === 1 ? 2 : 1)}
-                        className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-secondary/20 text-foreground/40 hover:text-secondary transition-all"
+                        className="p-1.5 hover:bg-secondary/10 dark:hover:bg-white/5 rounded-lg border border-transparent hover:border-secondary/20 text-foreground/40 hover:text-secondary transition-all"
                         title={user.account_status_id === 1 ? "Suspend" : "Activate"}
                       >
                         <Ban className="w-4 h-4" />
                       </button>
-                      <button className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-red-100 text-foreground/40 hover:text-red-500 transition-all">
+                      <button className="p-1.5 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg border border-transparent hover:border-red-200 dark:hover:border-red-500/20 text-foreground/40 hover:text-red-500 transition-all">
                         <Trash2 className="w-4 h-4" />
                       </button>
-                      <button className="p-1.5 hover:bg-white rounded-lg border border-transparent hover:border-secondary/20 text-foreground/40 hover:text-secondary transition-all">
+                      <button className="p-1.5 hover:bg-secondary/10 dark:hover:bg-white/5 rounded-lg border border-transparent hover:border-secondary/20 text-foreground/40 hover:text-secondary transition-all">
                         <MoreVertical className="w-4 h-4" />
                       </button>
                     </div>
@@ -175,7 +157,7 @@ export default function UserManagement() {
               ))}
             </tbody>
           </table>
-          {filteredUsers.length === 0 && (
+          {filteredUsers.length === 0 && !loading && (
             <div className="py-20 flex flex-col items-center justify-center text-foreground/30">
                <div className="w-16 h-16 bg-secondary/5 rounded-full flex items-center justify-center mb-4">
                  <Search className="w-8 h-8" />
@@ -184,7 +166,7 @@ export default function UserManagement() {
             </div>
           )}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

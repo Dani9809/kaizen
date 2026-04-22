@@ -8,6 +8,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.1.1] - 2026-04-22
+
+### Added
+- **Global Theme Management**: Implemented a robust `ThemeProvider` supporting System, Light, and Dark modes.
+- **Appearance Dropdown**: Replaced the simple theme toggle with a professional dropdown menu in the header for explicit theme selection.
+- **System Sync**: Added real-time synchronization with OS color schemes when in "Auto" mode.
+- **Theme Persistence**: Integrated `localStorage` to ensure user theme preferences and sidebar states persist across sessions.
+
+### Changed
+- **Design System Refinement**: Globally reduced border radius (from 3xl to 2xl, and xl to lg) for a sharper, more professional look.
+- **Glassmorphism Update**: Enhanced the `.glass` utility to be theme-aware, providing proper translucent backgrounds in dark mode.
+- **Component UI**: Updated `Button`, `Input`, `Badge`, and `Card` components with dedicated dark mode variants to eliminate "flashbang" effects.
+- **Sidebar UX**: Optimized the sidebar toggle mechanism and logo visibility for collapsed states.
+
+### Fixed
+- **Tailwind 4 Dark Mode**: Resolved an issue where `dark:` utilities were not responding to the `.dark` class by correctly configuring the Tailwind 4 custom variant.
+- **Color Responsiveness**: Fixed hardcoded white backgrounds in buttons and action menus that were causing visibility issues in dark mode.
+- **Layout Stability**: Resolved lint errors related to missing toggle functions and improved responsive auto-collapse behavior.
+
+---
 
 ## [0.1.0] - 2026-04-22
 
