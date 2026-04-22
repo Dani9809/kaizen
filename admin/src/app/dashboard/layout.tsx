@@ -60,7 +60,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="min-h-screen flex bg-background text-foreground selection:bg-secondary/30">
+    <div className="h-screen flex bg-background text-foreground selection:bg-secondary/30 overflow-hidden">
       {/* Overlay for mobile sidebar */}
       {isMobileMenuOpen && (
         <div 

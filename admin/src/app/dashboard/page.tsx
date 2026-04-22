@@ -5,12 +5,33 @@ import { useSearchParams } from "next/navigation";
 import Overview from "@/components/dashboard/Overview";
 import UserManagement from "@/components/dashboard/UserManagement";
 import Settings from "@/features/settings/components/Settings";
+import GroupManagement from "@/features/groups/components/GroupManagement";
+import GroupDetails from "@/features/groups/components/GroupDetails";
+import GameOverview from "@/features/gamification/components/GameOverview";
+import GameManagement from "@/features/gamification/components/GameManagement";
 
 function DashboardContent() {
   const searchParams = useSearchParams();
-  const activeView = searchParams.get("view") || "overview";
+  const view = searchParams.get("view") || "overview";
 
-  switch (activeView) {
+  if (view.startsWith("squads")) {
+    const parts = view.split("/id=");
+    if (parts.length > 1) {
+      return <GroupDetails id={parts[1]} />;
+    }
+    return <GroupManagement />;
+  }
+
+  if (view === "game") {
+    return <GameOverview />;
+  }
+
+  if (view.startsWith("game/")) {
+    const entity = view.replace("game/", "");
+    return <GameManagement entity={entity} />;
+  }
+
+  switch (view) {
     case "overview":
       return <Overview />;
     case "users":

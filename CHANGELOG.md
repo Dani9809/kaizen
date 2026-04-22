@@ -8,6 +8,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.1.5] - 2026-04-23
+
+### Added
+- **Unified Roster Manager**: Implemented a comprehensive squad management suite that combines member listing, role editing, and additions into a single modal.
+- **Searchable Player Discovery**: Integrated real-time player searching (username/email) for adding new members to squads.
+- **Bulk Member Queuing**: Added a "Pending Additions" staging queue allowing administrators to prepare multiple roster changes before saving.
+- **Bulk Action Backend**: Developed a new transactional endpoint for bulk member addition with data integrity guarantees.
+- **Atomic Ownership Swapping**: Implemented server-side logic to automatically demote existing owners when a new owner is assigned, maintaining the single-owner rule.
+- **Price Selection Presets**: Added quick-select buttons (Free, 100, 500, etc.) to the Game Management entity modal for faster data entry.
+
+### Changed
+- **In-Game Entity Hierarchy**: Reorganized the Game Engine navigation and card overview to follow a logical progression: Species Category → Species Level → Species → Pet → Shop Item Type → Shop Item → Quest Type → Quest.
+- **Simplified Navigation Header**: Refactored the dashboard header to display the current page name directly, removing redundant breadcrumb paths.
+- **Expanded Management Space**: Increased the Roster Manager modal width to `xl` (`max-w-4xl`) to better accommodate long strings and large squads.
+- **Themed Confirmations**: Replaced all native browser `confirm()` calls with the KAIZEN `ConfirmationModal` for warnings and destructive actions.
+
+### Fixed
+- **Role Selection Type Safety**: Resolved TypeScript errors related to results array inference in the backend admin service.
+- **Group Details Prop Mismatch**: Fixed a component error where unused props were being passed to the redesigned member modal.
+- **Admin Controller Syntax**: Resolved a syntax error in the squad creation logic that caused backend compilation failures.
+
+---
+
 ## [0.1.4] - 2026-04-23
 
 ### Added

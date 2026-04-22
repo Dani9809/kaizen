@@ -29,6 +29,8 @@ const viewNames: Record<string, string> = {
   overview: "Dashboard",
   users: "User Base",
   settings: "Settings",
+  squads: "Squad Base",
+  game: "In Game Management",
 };
 
 export const Header = ({ admin, onMenuClick }: HeaderProps) => {
@@ -37,6 +39,26 @@ export const Header = ({ admin, onMenuClick }: HeaderProps) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const modalRef = useRef<HTMLDivElement>(null);
+
+  const getHeaderTitle = () => {
+    const parts = activeView.split("/");
+    const mainView = parts[0];
+    const subView = parts[1];
+
+    if (subView) {
+      if (mainView === "game") {
+        return subView
+          .split("-")
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      }
+      if (mainView === "squads" && subView.startsWith("id=")) {
+        return "Squad Details";
+      }
+    }
+    
+    return viewNames[mainView] || "Dashboard";
+  };
 
   // Close modal when clicking outside
   useEffect(() => {
@@ -65,9 +87,9 @@ export const Header = ({ admin, onMenuClick }: HeaderProps) => {
           <Menu className="w-5 h-5" />
         </button>
         <div className="h-6 w-px bg-secondary/20 hidden sm:block lg:hidden" />
-        <h2 className="text-lg font-bold text-foreground font-heading truncate max-w-[150px] sm:max-w-none">
-          {viewNames[activeView] || "Dashboard"}
-        </h2>
+        <div className="text-lg font-bold text-foreground font-heading uppercase tracking-tight truncate max-w-[200px] sm:max-w-none">
+          {getHeaderTitle()}
+        </div>
       </div>
 
       <div className="flex items-center gap-2 sm:gap-6">

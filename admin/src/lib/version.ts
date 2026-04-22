@@ -6,7 +6,7 @@
 export const APP_VERSION = {
   major: 0,
   minor: 1,
-  patch: 4,
+  patch: 5,
   suffix: "STABLE",
 };
 
