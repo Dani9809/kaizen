@@ -28,7 +28,7 @@ import { PasswordField } from "@/components/ui/PasswordField";
 import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { CurrencyPresets } from "@/components/ui/CurrencyPresets";
+import { CurrencyPresets, CURRENCY_PRESETS } from "@/components/ui/CurrencyPresets";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 
 interface PlayerDetailsModalProps {
@@ -59,24 +59,30 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
     currency_balance: 0,
     account_created: "",
     account_updated: "",
   });
 
+  const passwordsMatch = formData.password === formData.confirmPassword && formData.confirmPassword !== "";
+  const showMatchError = formData.confirmPassword !== "" && !passwordsMatch;
+
   const [passwordValidation, setPasswordValidation] = useState({
-    length: true,
-    uppercase: true,
-    lowercase: true,
-    number: true,
-    special: true,
+    length: false,
+    uppercase: false,
+    lowercase: false,
+    number: false,
+    special: false,
   });
 
   useEffect(() => {
     if (formData.password) {
       setPasswordValidation(validatePassword(formData.password));
     } else {
-      setPasswordValidation({ length: true, uppercase: true, lowercase: true, number: true, special: true });
+      // If empty, reset to false (since it's optional, but we want to show it's not "satisfied" if not typed)
+      // Actually, let's keep it false when empty so user knows requirements for a NEW password.
+      setPasswordValidation({ length: false, uppercase: false, lowercase: false, number: false, special: false });
     }
   }, [formData.password]);
 
@@ -109,6 +115,7 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
         username: data.username,
         email: data.email,
         password: "", // Don't show password
+        confirmPassword: "",
         currency_balance: data.currency_balance,
         account_created: data.account_created,
         account_updated: data.account_updated,
@@ -186,7 +193,7 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
 
   const handleGeneratePassword = () => {
     const newPass = generatePassword(14);
-    setFormData({ ...formData, password: newPass });
+    setFormData({ ...formData, password: newPass, confirmPassword: newPass });
     toast.success("Strong password generated");
   };
 
@@ -292,7 +299,7 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
                     />
                   </div>
                   <div className="pt-4 border-t border-secondary/5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                    <div className="grid grid-cols-1 gap-6 items-start">
                        <Input
                           label="KAI Balance"
                           icon={Zap}
@@ -306,10 +313,10 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
                           }}
                           className="text-xl font-black text-secondary"
                        />
-                       <div className="space-y-2">
-                          <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Quick Presets</p>
+                       <div className="space-y-3">
+                          <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Quick Selection Presets</p>
                           <CurrencyPresets 
-                            presets={[1000, 10000, 50000, 100000]} 
+                            presets={CURRENCY_PRESETS} 
                             currentValue={formData.currency_balance}
                             onSelect={(val) => setFormData({ ...formData, currency_balance: val })}
                           />
@@ -319,25 +326,73 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
                 </div>
 
                 {/* Security Section */}
-                <div className="p-4 sm:p-6 bg-secondary/5 rounded-3xl border border-secondary/10 space-y-4">
+                <div className="p-4 sm:p-6 bg-secondary/5 rounded-3xl border border-secondary/10 space-y-6">
                   <h5 className="text-[10px] font-black uppercase tracking-widest text-secondary flex items-center gap-2">
                     <Lock className="w-4 h-4" /> Security Override
                   </h5>
-                  <PasswordField
-                    label="Force New Password"
-                    placeholder="Enter new password to reset..."
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    generateAction={
-                      <button 
-                        onClick={handleGeneratePassword}
-                        className="text-[9px] font-black uppercase tracking-widest text-secondary hover:text-secondary/80 transition-colors flex items-center gap-1"
-                      >
-                        <RefreshCw className="w-2.5 h-2.5" /> Generate Strong
-                      </button>
-                    }
-                  />
-                  <p className="text-[9px] text-muted-foreground/80 italic">* Leave blank to keep the player's current password.</p>
+                  
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 gap-6">
+                      <PasswordField
+                        label="Force New Password"
+                        placeholder="Enter new password to reset..."
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        generateAction={
+                          <button 
+                            onClick={handleGeneratePassword}
+                            className="text-[9px] font-black uppercase tracking-widest text-secondary hover:text-secondary/80 transition-colors flex items-center gap-1"
+                          >
+                            <RefreshCw className="w-2.5 h-2.5" /> Generate Strong
+                          </button>
+                        }
+                      />
+
+                      <div className="space-y-2">
+                        <PasswordField
+                          label="Confirm Override Password"
+                          placeholder="Repeat new password..."
+                          value={formData.confirmPassword}
+                          onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                          className={showMatchError ? "border-red-500/50 focus:border-red-500" : ""}
+                        />
+                        {showMatchError && (
+                          <p className="text-[10px] font-bold text-red-500 uppercase tracking-tight ml-1 animate-in fade-in slide-in-from-top-1">
+                            Passwords do not match
+                          </p>
+                        )}
+                        {passwordsMatch && (
+                          <p className="text-[10px] font-bold text-secondary uppercase tracking-tight ml-1 animate-in fade-in slide-in-from-top-1">
+                            Passwords match
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-background/50 rounded-2xl border border-secondary/10 space-y-3">
+                      <p className="text-[9px] font-black uppercase tracking-[0.15em] text-muted-foreground">Requirements Status</p>
+                      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                        {[
+                          { key: 'length', label: '8+ chars' },
+                          { key: 'uppercase', label: 'Upper' },
+                          { key: 'lowercase', label: 'Lower' },
+                          { key: 'number', label: 'Number' },
+                          { key: 'special', label: 'Special' },
+                        ].map((req) => (
+                          <div key={req.key} className="flex items-center gap-2">
+                            <div className={`w-4 h-4 rounded flex items-center justify-center transition-all ${passwordValidation[req.key as keyof typeof passwordValidation] ? 'bg-secondary text-white' : 'bg-secondary/5 text-muted-foreground/20 border border-secondary/10'}`}>
+                              <Check className="w-2.5 h-2.5" />
+                            </div>
+                            <span className={`text-[9px] font-bold uppercase tracking-tight ${passwordValidation[req.key as keyof typeof passwordValidation] ? 'text-foreground' : 'text-muted-foreground/40'}`}>
+                              {req.label}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className="text-[9px] text-muted-foreground/80 italic">* Leave blank to keep the player's current password. If providing a new one, it must meet all requirements.</p>
                 </div>
               </div>
             ) : (

@@ -10,11 +10,14 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateAdmin(username: string, pass: string): Promise<any> {
+  async validateAdmin(identifier: string, pass: string): Promise<any> {
     try {
       const user = await this.prisma.account.findFirst({
         where: { 
-          username,
+          OR: [
+            { username: identifier },
+            { email: identifier }
+          ],
           type: { type_name: 'Admin' }
         },
         include: { type: true }
@@ -24,8 +27,8 @@ export class AuthService {
         return null;
       }
 
-      // Rule: 12 rounds with username
-      const isMatch = await bcrypt.compare(pass + username, user.password);
+      // Rule: 12 rounds with username (always use the database username for comparison)
+      const isMatch = await bcrypt.compare(pass + user.username, user.password);
       
       if (isMatch) {
         const { password, ...result } = user;

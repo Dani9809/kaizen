@@ -10,12 +10,14 @@ import {
   ShieldAlert,
   Moon,
   Sun,
-  Monitor
+  Monitor,
+  Zap
 } from "lucide-react";
 import { toast } from "sonner";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { PasswordField } from "@/components/ui/PasswordField";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -85,8 +87,8 @@ export default function LoginPage() {
         <div className="bg-white/70 dark:bg-card/70 backdrop-blur-2xl p-6 rounded-[2rem] border border-white dark:border-white/5 shadow-2xl shadow-secondary/5 relative overflow-hidden animate-in fade-in zoom-in-95 duration-500">
           {/* Logo Section */}
           <div className="flex flex-col items-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <div className="w-14 h-14 bg-secondary rounded-2xl flex items-center justify-center shadow-xl shadow-secondary/30 mb-4 animate-float relative overflow-hidden group">
-              <ShieldCheck className="w-8 h-8 text-white relative z-10" />
+            <div className="w-14 h-14 bg-secondary rounded-2xl flex items-center justify-center shadow-xl shadow-secondary/30 mb-4 relative overflow-hidden group">
+              <Zap className="w-8 h-8 text-white fill-current relative z-10" />
               <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
             </div>
             <h1 className="text-2xl font-black text-foreground font-heading tracking-tight">
@@ -104,19 +106,17 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-4">
             <Input
-              label="Access Username"
+              label="ACCESS EMAIL OR USERNAME"
               icon={User}
-              placeholder="Administrator ID"
+              placeholder="Administrator ID or Email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
               autoFocus
             />
 
-            <Input
+            <PasswordField
               label="Secure Key"
-              icon={Lock}
-              type="password"
               placeholder="••••••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

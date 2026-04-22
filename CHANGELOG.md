@@ -8,6 +8,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.1.4] - 2026-04-23
+
+### Added
+- **Dashboard Footer**: Implemented a reusable `Footer` component with centralized version tracking, build status indicators, and documentation links.
+- **Global Version Provider**: Established a centralized versioning library (`lib/version.ts`) for dynamic build string interpolation across the portal.
+- **Security Validation Dashboard**: Added a real-time password requirement checklist (8+ chars, Uppercase, Lowercase, Number, Special) with live satisfy/fail indicators.
+- **Live Password Match Detection**: Integrated real-time comparison between "New Password" and "Confirm Password" fields with animated visual flagging.
+- **Premium Checkbox System**: Developed a custom, circular checkbox UI with smooth transitions and centered checkmarks, replacing native browser defaults.
+
+### Changed
+- **Security Override UX**: Refactored the player security section in `PlayerDetailsModal` into a full-width, single-column layout for better readability.
+- **Standardized Modal Architecture**: Migrated "Theme Selection" and "Danger Zone" modals to the core `Modal` component, eliminating inline styling and legacy backdrop logic.
+- **KAI Balance Controls**: Reorganized currency management to a full-width field with an integrated "Quick Selection Presets" dashboard.
+- **Core Modal Upgrades**: Enhanced the base `Modal` component with native support for `description` and `headerIcon` props.
+- **Dashboard Spacing**: Optimized vertical hierarchy and content pinning in the main dashboard layout to prevent footer crowding.
+
+### Fixed
+- **Authentication Flexibility**: Enabled dual-identifier login support, allowing administrators to authenticate using either their `username` or `email`.
+- **Password Generation Sync**: Fixed a bug where generating a strong password only filled the primary field; it now automatically populates and validates the confirmation field.
+- **Backend Port Logging**: Improved server startup visibility by adding color-coded port logging to the NestJS `main.ts` file.
+- **Checkbox Distortions**: Resolved an issue where checkboxes would appear oval by implementing strict `aspect-square` and `shrink-0` constraints.
+
+---
+
 ## [0.1.3] - 2026-04-23
 
 ### Added

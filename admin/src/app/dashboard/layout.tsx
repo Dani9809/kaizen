@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { Sidebar } from "@/components/dashboard/layout/Sidebar";
 import { Header } from "@/components/dashboard/layout/Header";
+import { Footer } from "@/components/dashboard/layout/Footer";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -86,9 +87,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           />
         </Suspense>
 
-        <main className="flex-1 overflow-y-auto p-4 lg:p-8 custom-scrollbar relative">
-          <div className="max-w-7xl mx-auto h-full">
-            {children}
+        <main className="flex-1 overflow-y-auto custom-scrollbar relative flex flex-col">
+          <div className="max-w-7xl w-full mx-auto flex-1 p-4 lg:p-8 flex flex-col gap-12">
+            <div className="flex-1">
+              {children}
+            </div>
+            <Footer />
           </div>
         </main>
       </div>

@@ -2,6 +2,10 @@
 
 import React from "react";
 
+export const CURRENCY_PRESETS = [100, 500, 1000, 5000, 10000, 50000, 100000];
+export const STARTER_PRESETS = [500, 1000, 5000, 10000];
+export const WHALE_PRESETS = [10000, 50000, 100000, 500000, 1000000];
+
 interface CurrencyPresetsProps {
   presets: number[];
   onSelect: (value: number) => void;
@@ -14,6 +18,7 @@ export const CurrencyPresets = ({ presets, onSelect, currentValue }: CurrencyPre
       {presets.map((amount) => (
         <button
           key={amount}
+          type="button"
           onClick={() => onSelect(amount)}
           className={`
             px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-tight transition-all border

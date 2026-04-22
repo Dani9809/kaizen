@@ -74,7 +74,7 @@ export class AdminService {
       where: { account_id: id },
       data: {
         ...updateData,
-        account_updated: new Date()
+        account_updated: dto.account_updated || new Date()
       },
       include: {
         status: true,

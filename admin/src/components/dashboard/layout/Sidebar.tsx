@@ -10,6 +10,7 @@ import {
   X,
   PanelLeftClose,
   PanelLeftOpen,
+  Zap,
   LucideIcon
 } from "lucide-react";
 
@@ -47,19 +48,19 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
     <aside 
       className={`
         fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 transition-all duration-300
-        ${isMobileOpen ? "translate-x-0 w-64" : "-translate-x-full w-64 lg:w-auto lg:translate-x-0"}
-        ${!isMobileOpen && isOpen ? "lg:w-64" : "lg:w-20"}
-        bg-white dark:bg-card border-r border-secondary/20 dark:border-white/5 flex flex-col shadow-xl shadow-secondary/5
+        ${isMobileOpen ? "translate-x-0 w-[188px]" : "-translate-x-full w-[188px] lg:translate-x-0"}
+        ${!isMobileOpen && isOpen ? "lg:w-[188px]" : "lg:w-[65px]"}
+        bg-white dark:bg-card border-r border-secondary/20 dark:border-white/5 flex flex-col shadow-xl shadow-secondary/5 shrink-0
       `}
     >
-      <div className={`h-20 flex items-center w-full ${isOpen || isMobileOpen ? "px-6" : "justify-center"}`}>
+      <div className={`h-20 flex items-center w-full px-3`}>
         {/* Desktop View */}
         <div className="hidden lg:flex items-center justify-center w-full">
           {isOpen ? (
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-secondary rounded-lg flex items-center justify-center shadow-lg shadow-secondary/20 animate-float shrink-0">
-                  <span className="text-white font-bold text-lg font-heading">K</span>
+                <div className="w-9 h-9 bg-secondary rounded-lg flex items-center justify-center shadow-lg shadow-secondary/20 shrink-0">
+                  <Zap className="w-5 h-5 text-white fill-current" />
                 </div>
                 <span className="font-bold text-lg tracking-tight text-gradient font-heading uppercase">Kaizen</span>
               </div>
@@ -68,16 +69,16 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
                 className="p-1.5 border border-secondary/10 dark:border-white/10 hover:border-secondary/30 dark:hover:border-secondary/50 hover:bg-secondary/5 rounded-lg text-muted-foreground transition-all shadow-sm bg-white dark:bg-background group ml-4"
                 title="Collapse Sidebar"
               >
-                <PanelLeftClose className="w-4 h-4 group-hover:text-secondary transition-colors" />
+                <PanelLeftClose className="w-5 h-5 group-hover:text-secondary transition-colors" />
               </button>
             </div>
           ) : (
             <button 
               onClick={onToggle} 
-              className="p-1.5 border border-secondary/10 dark:border-white/10 hover:border-secondary/30 dark:hover:border-secondary/50 hover:bg-secondary/5 rounded-lg text-muted-foreground transition-all shadow-sm bg-white dark:bg-background group"
+              className="w-full flex items-center justify-center p-3 border border-secondary/10 dark:border-white/10 hover:border-secondary/30 dark:hover:border-secondary/50 hover:bg-secondary/5 rounded-lg text-muted-foreground transition-all shadow-sm bg-white dark:bg-background group"
               title="Expand Sidebar"
             >
-              <PanelLeftOpen className="w-4 h-4 group-hover:text-secondary transition-colors" />
+              <PanelLeftOpen className="w-5 h-5 group-hover:text-secondary transition-colors" />
             </button>
           )}
         </div>
@@ -85,8 +86,8 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
         {/* Mobile View */}
         <div className="lg:hidden flex items-center justify-between w-full">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shadow-lg shadow-secondary/20 animate-float shrink-0">
-              <span className="text-white font-bold text-lg font-heading">K</span>
+            <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shadow-lg shadow-secondary/20 shrink-0">
+              <Zap className="w-5 h-5 text-white fill-current" />
             </div>
             <span className="font-bold text-lg tracking-tight text-gradient font-heading uppercase">Kaizen</span>
           </div>
@@ -95,7 +96,7 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
             className="p-1.5 border border-secondary/10 dark:border-white/10 hover:border-secondary/30 dark:hover:border-secondary/50 hover:bg-secondary/5 rounded-lg text-muted-foreground transition-all shadow-sm bg-white dark:bg-background group"
             title="Close Sidebar"
           >
-            <X className="w-4 h-4 group-hover:text-red-500 transition-colors" />
+            <X className="w-5 h-5 group-hover:text-red-500 transition-colors" />
           </button>
         </div>
       </div>
@@ -122,7 +123,7 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
         ))}
       </div>
 
-      <div className="p-4 mt-auto border-t border-secondary/10 dark:border-white/5">
+      <div className="px-3 py-4 mt-auto border-t border-secondary/10 dark:border-white/5">
         <button
           onClick={onLogout}
           className={`

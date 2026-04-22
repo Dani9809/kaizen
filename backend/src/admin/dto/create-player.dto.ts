@@ -31,4 +31,6 @@ export class CreatePlayerDto {
   @IsNotEmpty()
   @Min(0)
   currency_balance: number;
+
+  account_updated?: Date;
 }

@@ -8,6 +8,8 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
+  description?: string;
+  headerIcon?: React.ReactNode;
   children: React.ReactNode;
   footer?: React.ReactNode;
   size?: "sm" | "md" | "lg" | "xl";
@@ -17,6 +19,8 @@ export const Modal = ({
   isOpen,
   onClose,
   title,
+  description,
+  headerIcon,
   children,
   footer,
   size = "md"
@@ -59,9 +63,17 @@ export const Modal = ({
       `}>
         {/* Header */}
         <div className="px-4 sm:px-6 py-4 border-b border-secondary/10 flex items-center justify-between bg-secondary/5">
-          <h3 className="font-heading font-black text-lg uppercase tracking-tight text-foreground">
-            {title}
-          </h3>
+          <div className="flex items-center gap-3">
+            {headerIcon}
+            <div>
+              <h3 className="font-heading font-black text-lg uppercase tracking-tight text-foreground">
+                {title}
+              </h3>
+              {description && (
+                <p className="text-[10px] sm:text-xs text-muted-foreground font-medium">{description}</p>
+              )}
+            </div>
+          </div>
           <button 
             onClick={onClose}
             className="p-2 hover:bg-secondary/10 rounded-xl text-foreground/40 hover:text-secondary transition-all"

@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Overview from "@/components/dashboard/Overview";
 import UserManagement from "@/components/dashboard/UserManagement";
+import Settings from "@/features/settings/components/Settings";
 
 function DashboardContent() {
   const searchParams = useSearchParams();
@@ -15,11 +16,7 @@ function DashboardContent() {
     case "users":
       return <UserManagement />;
     case "settings":
-      return (
-        <div className="flex flex-col items-center justify-center h-full text-foreground/40">
-          <p className="font-heading font-bold text-xl">Settings View coming soon...</p>
-        </div>
-      );
+      return <Settings />;
     default:
       return <Overview />;
   }

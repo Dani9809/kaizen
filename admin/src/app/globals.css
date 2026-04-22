@@ -106,18 +106,33 @@
   input[type=number] {
     -moz-appearance: textfield;
   }
+
+  /* Custom Premium Checkbox */
+  input[type="checkbox"] {
+    @apply appearance-none w-5 h-5 aspect-square border-2 border-secondary/30 rounded-full cursor-pointer 
+           relative transition-all duration-300 bg-background hover:border-secondary shrink-0
+           flex items-center justify-center;
+  }
+
+  input[type="checkbox"]:checked {
+    @apply bg-secondary border-secondary shadow-lg shadow-secondary/20;
+  }
+
+  input[type="checkbox"]:checked::after {
+    content: '';
+    @apply absolute border-white border-r-2 border-b-2;
+    width: 0.35rem;
+    height: 0.6rem;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  input[type="checkbox"]:focus-visible {
+    @apply outline-2 outline-offset-2 outline-secondary/50;
+  }
 }
 
-/* Animations */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
 
 @keyframes pulse-soft {
   0%, 100% { opacity: 1; }
