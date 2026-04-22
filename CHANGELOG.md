@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.1.0] - 2026-04-22
+
+### Added
+- **KAIZEN Admin Web Portal**: Initialized a dedicated administrative dashboard in `/admin` for system management.
+- **Admin Backend Infrastructure**: Created `AdminModule` and `AuthModule` in the NestJS backend to handle secure administrative access.
+- **Authentication System**: Implemented secure login logic with JWT and password hashing using `bcryptjs`.
+- **Account Types**: Added `TYPE` table and integrated `type_id` into the `ACCOUNT` model to distinguish between standard users and administrators.
+- **Admin Controllers**: Developed endpoints for administrative tasks and dashboard statistics.
+
+### Changed
+- **Database Schema**: Updated the Prisma schema to include account type relations and enhanced account metadata.
+- **Prisma Service**: Refined database connection logic and error handling in `PrismaService`.
+- **App Module**: Integrated new `Admin` and `Auth` modules into the core application logic.
+- **Project Structure**: Updated `.gitignore` to manage new frontend and backend build artifacts.
+
+### Fixed
+- **Bcrypt Compatibility**: Resolved issues with native `bcrypt` by migrating to `bcryptjs` for consistent cross-platform performance.
+- **Database Connectivity**: Stabilized backend-to-database connections during server initialization.
+
+---
+
 ## [0.0.2] - 2026-04-22
 
 ### Added

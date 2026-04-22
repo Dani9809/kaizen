@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: var(--font-poppins);
+  --font-body: var(--font-open-sans);
+
+  --color-primary: #cff8f4;
+  --color-secondary: #68e0dc;
+  --color-accent: #a0efe9;
+  
+  --color-background: #f0fdfc;
+  --color-foreground: #1a2a2a;
+
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+}
+
+@layer base {
+  html {
+    font-size: 14px; /* Scaling down slightly */
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-poppins), sans-serif;
+    letter-spacing: -0.025em;
+  }
+  
+  body {
+    font-family: var(--font-open-sans), sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    @apply antialiased;
+  }
+}
+
+/* Custom Utilities for Gamified Feel */
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-lg border border-white/40;
+  }
+  
+  .glass-dark {
+    @apply bg-foreground/5 backdrop-blur-md border border-foreground/10;
+  }
+  
+  .card-shadow {
+    box-shadow: 0 8px 32px -4px rgba(104, 224, 220, 0.15);
+  }
+
+  .gamified-gradient {
+    @apply bg-gradient-to-br from-secondary via-accent to-primary;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-secondary to-[#48c4c0];
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-secondary/30 rounded-full hover:bg-secondary/50 transition-colors;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}

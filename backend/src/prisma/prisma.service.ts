@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
@@ -12,5 +13,4 @@ export class PrismaService extends PrismaClient {
     const adapter = new PrismaPg(pool);
     super({ adapter });
   }
-
 }

@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -12,6 +13,17 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log('Start seeding...');
+
+  // 0. Account Types
+  const accountTypes = ['User', 'Admin'];
+  for (const type of accountTypes) {
+    await prisma.type.upsert({
+      where: { type_name: type },
+      update: {},
+      create: { type_name: type },
+    });
+  }
+  console.log('Seeded AccountTypes');
 
   // 1. Account Statuses
   const accountStatuses = ['Active', 'Suspended', 'Banned'];
@@ -104,6 +116,38 @@ async function main() {
     });
   }
   console.log('Seeded Moods');
+
+  // 7. Initial Admin Account
+  const adminType = await prisma.type.findUnique({ where: { type_name: 'Admin' } });
+  const activeStatus = await prisma.accountStatus.findUnique({ where: { account_status_name: 'Active' } });
+  const freeTier = await prisma.subscriptionTier.findUnique({ where: { subscription_tier_name: 'Free' } });
+
+  if (adminType && activeStatus && freeTier) {
+    const adminUsername = 'admin';
+    const adminPassword = 'admin_password_123'; // User can change this later
+    const hashedPassword = bcrypt.hashSync(adminPassword + adminUsername, 12);
+
+    await prisma.account.upsert({
+      where: { username: adminUsername },
+      update: {
+        type_id: adminType.type_id,
+        account_status_id: activeStatus.account_status_id,
+        subscription_tier_id: freeTier.subscription_tier_id,
+      },
+      create: {
+        username: adminUsername,
+        email: 'admin@kaizen.com',
+        password: hashedPassword,
+        type_id: adminType.type_id,
+        account_status_id: activeStatus.account_status_id,
+        subscription_tier_id: freeTier.subscription_tier_id,
+        currency_balance: 0,
+        current_streak: 0,
+        longest_streak: 0,
+      },
+    });
+    console.log('Seeded Admin Account');
+  }
 
   console.log('Seeding finished.');
 }

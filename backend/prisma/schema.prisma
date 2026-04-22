@@ -11,6 +11,14 @@ datasource db {
 
 // 1. Core & Account Tables
 
+model Type {
+  type_id   Int       @id @default(autoincrement())
+  type_name String    @unique
+  accounts  Account[]
+
+  @@map("TYPE")
+}
+
 model AccountStatus {
   account_status_id   Int       @id @default(autoincrement())
   account_status_name String    @unique
@@ -32,6 +40,7 @@ model SubscriptionTier {
 
 model Account {
   account_id           Int               @id @default(autoincrement())
+  type_id              Int
   account_status_id    Int
   subscription_tier_id Int
   username             String            @unique
@@ -46,6 +55,7 @@ model Account {
   
   status               AccountStatus     @relation(fields: [account_status_id], references: [account_status_id])
   tier                 SubscriptionTier  @relation(fields: [subscription_tier_id], references: [subscription_tier_id])
+  type                 Type              @relation(fields: [type_id], references: [type_id])
   
   group_memberships    GroupMember[]
   sent_nudges          Nudge[]           @relation("SentNudges")

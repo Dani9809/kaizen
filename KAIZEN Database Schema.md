@@ -10,6 +10,10 @@
 
 #### 1. Core & Account Tables
 
+**Table `TYPE`**
+* `type_id` (INT, PK)
+* `type_name` (VARCHAR)
+
 **Table: `ACCOUNT_STATUS`**
 * `account_status_id` (INT, PK)
 * `account_status_name` (VARCHAR)
@@ -23,6 +27,7 @@
 
 **Table: `ACCOUNT`**
 * `account_id` (INT, PK)
+* `type_id` (INT, FK -> `TYPE.type_id`)
 * `account_status_id` (INT, FK -> `ACCOUNT_STATUS.account_status_id`)
 * `subscription_tier_id` (INT, FK -> `SUBSCRIPTION_TIER.subscription_tier_id`)
 * `username` (VARCHAR, UQ)
