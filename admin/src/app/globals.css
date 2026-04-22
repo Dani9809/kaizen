@@ -15,6 +15,7 @@
   --color-card: var(--card-bg);
   --color-card-foreground: var(--foreground);
   --color-border-custom: var(--border-color);
+  --color-muted-foreground: var(--muted-foreground);
 
   --radius-xl: 1rem;
   --radius-2xl: 1.25rem;
@@ -24,6 +25,7 @@
 :root {
   --background:  #f1fcfb;
   --foreground: #1a2a2a;
+  --muted-foreground: #526666;
   --card-bg: #cff8f4;
   --border-color: rgba(104, 224, 220, 0.1);
 }
@@ -31,12 +33,14 @@
 .dark {
   --background: #121212;
   --foreground: #f1fcfb;
+  --muted-foreground: #a0b0b0;
   --card-bg: #1e1e1e;
   --border-color: rgba(255, 255, 255, 0.05);
   
   /* Explicitly re-apply to theme variables if needed */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
   --color-card: var(--card-bg);
 }
 

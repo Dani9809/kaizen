@@ -15,7 +15,7 @@ import {
   Zap,
   Edit2
 } from "lucide-react";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -223,11 +223,11 @@ export default function UserManagement() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-secondary/5 border-b border-secondary/10">
-                <th className="px-6 py-4 text-[10px] font-black text-foreground/40 uppercase tracking-widest">Player Profile</th>
-                <th className="px-6 py-4 text-[10px] font-black text-foreground/40 uppercase tracking-widest">Rank/Type</th>
-                <th className="px-6 py-4 text-[10px] font-black text-foreground/40 uppercase tracking-widest">Status</th>
-                <th className="px-6 py-4 text-[10px] font-black text-foreground/40 uppercase tracking-widest">Currency</th>
-                <th className="px-6 py-4 text-[10px] font-black text-foreground/40 uppercase tracking-widest text-right">Actions</th>
+                <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Player Profile</th>
+                <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Rank/Type</th>
+                <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Status</th>
+                <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Currency</th>
+                <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-secondary/5">
@@ -244,7 +244,7 @@ export default function UserManagement() {
                       </div>
                       <div>
                         <p className="text-sm font-bold text-foreground">{user.username}</p>
-                        <p className="text-[10px] text-foreground/40 flex items-center gap-1">
+                        <p className="text-[10px] text-muted-foreground flex items-center gap-1">
                           <Mail className="w-3 h-3" /> {user.email}
                         </p>
                       </div>
@@ -257,7 +257,7 @@ export default function UserManagement() {
                       ) : (
                         <Shield className="w-3.5 h-3.5 text-blue-500" />
                       )}
-                      <span className="text-[11px] font-black uppercase tracking-tight text-foreground/70">
+                      <span className="text-[11px] font-black uppercase tracking-tight text-foreground/80">
                         {user.type?.type_name || "MEMBER"}
                       </span>
                     </div>

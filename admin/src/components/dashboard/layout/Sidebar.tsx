@@ -65,7 +65,7 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
               </div>
               <button 
                 onClick={onToggle} 
-                className="p-1.5 border border-secondary/10 dark:border-white/10 hover:border-secondary/30 dark:hover:border-secondary/50 hover:bg-secondary/5 rounded-lg text-foreground/40 transition-all shadow-sm bg-white dark:bg-background group ml-4"
+                className="p-1.5 border border-secondary/10 dark:border-white/10 hover:border-secondary/30 dark:hover:border-secondary/50 hover:bg-secondary/5 rounded-lg text-muted-foreground transition-all shadow-sm bg-white dark:bg-background group ml-4"
                 title="Collapse Sidebar"
               >
                 <PanelLeftClose className="w-4 h-4 group-hover:text-secondary transition-colors" />
@@ -74,7 +74,7 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
           ) : (
             <button 
               onClick={onToggle} 
-              className="p-1.5 border border-secondary/10 dark:border-white/10 hover:border-secondary/30 dark:hover:border-secondary/50 hover:bg-secondary/5 rounded-lg text-foreground/40 transition-all shadow-sm bg-white dark:bg-background group"
+              className="p-1.5 border border-secondary/10 dark:border-white/10 hover:border-secondary/30 dark:hover:border-secondary/50 hover:bg-secondary/5 rounded-lg text-muted-foreground transition-all shadow-sm bg-white dark:bg-background group"
               title="Expand Sidebar"
             >
               <PanelLeftOpen className="w-4 h-4 group-hover:text-secondary transition-colors" />
@@ -92,7 +92,7 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
           </div>
           <button 
             onClick={onCloseMobile} 
-            className="p-1.5 border border-secondary/10 dark:border-white/10 hover:border-secondary/30 dark:hover:border-secondary/50 hover:bg-secondary/5 rounded-lg text-foreground/40 transition-all shadow-sm bg-white dark:bg-background group"
+            className="p-1.5 border border-secondary/10 dark:border-white/10 hover:border-secondary/30 dark:hover:border-secondary/50 hover:bg-secondary/5 rounded-lg text-muted-foreground transition-all shadow-sm bg-white dark:bg-background group"
             title="Close Sidebar"
           >
             <X className="w-4 h-4 group-hover:text-red-500 transition-colors" />
@@ -110,7 +110,7 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
               ${isOpen || isMobileOpen ? "gap-3" : "justify-center"}
               ${activeView === item.id 
                 ? "bg-secondary/10 text-secondary" 
-                : "text-foreground/40 hover:bg-secondary/5 hover:text-secondary"}
+                : "text-muted-foreground hover:bg-secondary/5 hover:text-secondary"}
             `}
           >
             <item.icon className={`w-5 h-5 shrink-0 ${activeView === item.id ? "text-secondary" : ""}`} />

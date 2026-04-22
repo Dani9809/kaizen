@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: "Administrative dashboard for KAIZEN Social Productivity App",
 };
 
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
         className={`${poppins.variable} ${openSans.variable} font-body antialiased`}
       >
         <ThemeProvider>
-          <Toaster position="top-right" reverseOrder={false} />
+          <Toaster position="top-right" richColors closeButton />
           {children}
         </ThemeProvider>
       </body>

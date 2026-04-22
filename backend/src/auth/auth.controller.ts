@@ -10,7 +10,7 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     const user = await this.authService.validateAdmin(loginDto.username, loginDto.pass);
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials or not an admin');
+      throw new UnauthorizedException('Invalid credentials');
     }
     return this.authService.login(user);
   }

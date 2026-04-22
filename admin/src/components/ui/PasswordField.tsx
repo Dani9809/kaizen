@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Copy, Lock } from "lucide-react";
 import { Input } from "./Input";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 
 interface PasswordFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;

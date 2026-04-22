@@ -21,13 +21,13 @@ export const Select = ({
   return (
     <div className={`space-y-1.5 ${containerClassName}`}>
       {label && (
-        <label className="text-[10px] font-black uppercase tracking-widest text-foreground/40 ml-1">
+        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">
           {label}
         </label>
       )}
       <div className="relative group">
         {Icon && (
-          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30 group-focus-within:text-secondary transition-colors pointer-events-none" />
+          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60 group-focus-within:text-secondary transition-colors pointer-events-none" />
         )}
         <select
           className={`
@@ -43,7 +43,7 @@ export const Select = ({
             </option>
           ))}
         </select>
-        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/20 pointer-events-none group-focus-within:text-secondary transition-colors" />
+        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 pointer-events-none group-focus-within:text-secondary transition-colors" />
       </div>
     </div>
   );

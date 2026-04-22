@@ -71,7 +71,7 @@ export const Header = ({ admin, onMenuClick }: HeaderProps) => {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-6">
-        <button className="relative p-2 text-foreground/40 hover:text-secondary transition-colors">
+        <button className="relative p-2 text-muted-foreground hover:text-secondary transition-colors">
           <Bell className="w-5 h-5" />
           <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-red-500 rounded-full border-2 border-white animate-pulse-soft" />
         </button>
@@ -107,7 +107,7 @@ export const Header = ({ admin, onMenuClick }: HeaderProps) => {
                   
                   <div className="p-2">
                     <div className="px-3 py-2">
-                      <p className="text-[10px] font-black text-foreground/40 uppercase tracking-widest mb-2">Appearance</p>
+                      <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-2">Appearance</p>
                       <div className="grid grid-cols-3 gap-2">
                         {themeOptions.map((option) => (
                           <button
@@ -117,7 +117,7 @@ export const Header = ({ admin, onMenuClick }: HeaderProps) => {
                               flex flex-col items-center gap-1.5 p-2 rounded-lg transition-all border
                               ${theme === option.id 
                                 ? "bg-secondary/10 border-secondary/30 text-secondary" 
-                                : "bg-transparent border-transparent text-foreground/40 hover:bg-secondary/5 hover:text-secondary"}
+                                : "bg-transparent border-transparent text-muted-foreground hover:bg-secondary/5 hover:text-secondary"}
                             `}
                           >
                             <option.icon className="w-4 h-4" />
@@ -135,7 +135,7 @@ export const Header = ({ admin, onMenuClick }: HeaderProps) => {
                         localStorage.removeItem("admin_user");
                         window.location.href = "/login";
                       }}
-                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 text-foreground/40 hover:text-red-500 transition-all group"
+                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-all group"
                     >
                       <div className="p-2 rounded-lg bg-red-50 dark:bg-red-500/10 text-red-400 group-hover:bg-red-100 dark:group-hover:bg-red-500/20 transition-colors">
                         <LogOut className="w-4 h-4" />

@@ -18,11 +18,11 @@ export const Button = ({
   const baseStyles = "inline-flex items-center justify-center rounded-lg font-bold transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
   
   const variants = {
-    primary: "bg-white dark:bg-card border border-secondary/20 dark:border-white/5 text-foreground/60 dark:text-foreground/40 hover:bg-secondary/5 dark:hover:bg-white/5",
+    primary: "bg-white dark:bg-card border border-secondary/20 dark:border-white/5 text-muted-foreground dark:text-muted-foreground hover:bg-secondary/5 dark:hover:bg-white/5",
     secondary: "bg-secondary/10 dark:bg-secondary/20 text-secondary hover:bg-secondary/20 dark:hover:bg-secondary/30",
-    ghost: "bg-transparent text-foreground/40 dark:text-foreground/30 hover:bg-secondary/5 dark:hover:bg-white/5 hover:text-secondary",
+    ghost: "bg-transparent text-muted-foreground hover:bg-secondary/5 dark:hover:bg-white/5 hover:text-secondary",
     danger: "bg-red-50 dark:bg-red-500/10 text-red-500 hover:bg-red-100 dark:hover:bg-red-500/20",
-    gradient: "gamified-gradient text-white shadow-lg shadow-secondary/20 dark:shadow-none hover:scale-105",
+    gradient: "gamified-gradient text-white shadow-lg shadow-secondary/20 dark:shadow-none hover:scale-105 active:scale-95",
   };
 
   const sizes = {

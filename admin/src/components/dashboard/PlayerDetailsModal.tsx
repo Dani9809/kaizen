@@ -18,7 +18,7 @@ import {
   RefreshCw,
   Ban
 } from "lucide-react";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { generatePassword, validatePassword } from "@/lib/password";
 import { Modal } from "@/components/ui/Modal";
@@ -237,7 +237,7 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
       {fetching ? (
         <div className="py-20 flex flex-col items-center justify-center space-y-4">
            <RefreshCw className="w-8 h-8 text-secondary animate-spin" />
-           <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40">Fetching player data...</p>
+           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Fetching player data...</p>
         </div>
       ) : (
         <>
@@ -267,7 +267,7 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
 
                 {/* Administrative Section */}
                 <div className="p-4 sm:p-6 bg-white dark:bg-card rounded-3xl border border-secondary/20 shadow-lg space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40">Level & Status Configuration</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Level & Status Configuration</p>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <Select
                       icon={User}
@@ -307,7 +307,7 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
                           className="text-xl font-black text-secondary"
                        />
                        <div className="space-y-2">
-                          <p className="text-[9px] font-black uppercase tracking-widest text-foreground/40">Quick Presets</p>
+                          <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Quick Presets</p>
                           <CurrencyPresets 
                             presets={[1000, 10000, 50000, 100000]} 
                             currentValue={formData.currency_balance}
@@ -337,7 +337,7 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
                       </button>
                     }
                   />
-                  <p className="text-[9px] text-foreground/30 italic">* Leave blank to keep the player's current password.</p>
+                  <p className="text-[9px] text-muted-foreground/80 italic">* Leave blank to keep the player's current password.</p>
                 </div>
               </div>
             ) : (
@@ -357,7 +357,7 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
                          <h4 className="font-heading font-black text-xl uppercase tracking-tight text-foreground leading-none truncate">
                            {formData.username}
                          </h4>
-                         <p className="text-xs font-bold text-foreground/40 flex items-center justify-center sm:justify-start gap-1.5 truncate">
+                         <p className="text-xs font-bold text-muted-foreground flex items-center justify-center sm:justify-start gap-1.5 truncate">
                            <Mail className="w-3.5 h-3.5 shrink-0" /> <span className="truncate">{formData.email}</span>
                          </p>
                          <div className="flex items-center justify-center sm:justify-start gap-2 mt-2">
@@ -391,16 +391,16 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Security Info */}
                   <div className="p-4 sm:p-5 bg-secondary/5 rounded-3xl border border-secondary/10 space-y-3">
-                     <h5 className="text-[9px] font-black uppercase tracking-widest text-foreground/40 flex items-center gap-1.5">
+                     <h5 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
                         <Shield className="w-3 h-3" /> Security Profile
                      </h5>
                      <div className="space-y-3">
                         <div className="flex items-center justify-between group min-w-0">
-                           <span className="text-[9px] font-bold text-foreground/30 uppercase shrink-0">Login ID</span>
+                           <span className="text-[9px] font-bold text-muted-foreground/70 uppercase shrink-0">Login ID</span>
                            <span className="text-xs font-black truncate ml-4">{formData.username}</span>
                         </div>
                         <div className="flex items-center justify-between group border-t border-secondary/5 pt-3 min-w-0">
-                           <span className="text-[9px] font-bold text-foreground/30 uppercase shrink-0">Email</span>
+                           <span className="text-[9px] font-bold text-muted-foreground/70 uppercase shrink-0">Email</span>
                            <span className="text-xs font-black truncate ml-4">{formData.email}</span>
                         </div>
                      </div>
@@ -408,12 +408,12 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
 
                   {/* System Info */}
                   <div className="p-4 sm:p-5 bg-secondary/5 rounded-3xl border border-secondary/10 space-y-3">
-                     <h5 className="text-[9px] font-black uppercase tracking-widest text-foreground/40 flex items-center gap-1.5">
+                     <h5 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
                         <ShieldAlert className="w-3 h-3" /> System Metrics
                      </h5>
                      <div className="space-y-3">
                          <div className="flex items-center justify-between group min-w-0">
-                            <span className="text-[9px] font-bold text-foreground/30 uppercase shrink-0">Joined</span>
+                            <span className="text-[9px] font-bold text-muted-foreground/70 uppercase shrink-0">Joined</span>
                             <span className="text-[10px] font-black truncate ml-4">
                               {formData.account_created ? new Date(formData.account_created).toLocaleString('en-US', { 
                                 month: 'short', day: 'numeric', year: 'numeric', 
@@ -422,7 +422,7 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
                             </span>
                          </div>
                          <div className="flex items-center justify-between group border-t border-secondary/5 pt-3">
-                            <span className="text-[9px] font-bold text-foreground/30 uppercase shrink-0">Updated</span>
+                            <span className="text-[9px] font-bold text-muted-foreground/70 uppercase shrink-0">Updated</span>
                             <span className="text-[10px] font-black truncate ml-4 text-secondary">
                               {formData.account_updated ? new Date(formData.account_updated).toLocaleString('en-US', { 
                                 month: 'short', day: 'numeric', year: 'numeric', 
@@ -454,7 +454,7 @@ export default function PlayerDetailsModal({ isOpen, onClose, onSuccess, playerI
                   </div>
 
                   <div className="p-4 sm:p-5 bg-white dark:bg-card rounded-3xl border border-secondary/10 space-y-3 shadow-sm">
-                     <p className="text-[9px] font-black uppercase tracking-widest text-foreground/40">Tools</p>
+                     <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Tools</p>
                      <div className="space-y-1.5">
                         <Button variant="primary" size="sm" className="w-full justify-start gap-2 font-bold text-[10px] uppercase">
                            <Mail className="w-3.5 h-3.5" /> Message

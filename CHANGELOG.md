@@ -8,6 +8,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.1.3] - 2026-04-23
+
+### Added
+- **Admin Login Overhaul**: Redesigned the login portal with a premium aesthetic, featuring glassmorphism, floating background elements, and high-contrast typography.
+- **Sonner Toast Integration**: Upgraded to the modern `Sonner` toast provider for a unified, sleek notification experience across the admin interface.
+- **Dynamic Theme Controls**: Integrated a persistent theme selector directly into the login experience for immediate Light/Dark/System mode switching.
+
+### Changed
+- **Design System Standardization**: Implemented the `muted-foreground` design token and refined semantic color variables in `globals.css` for superior legibility.
+- **Component UI Refresh**: Optimized `Button`, `Input`, `Card`, and `Badge` components to strictly adhere to the updated monochromatic-leaning design system.
+- **Administrative Aesthetics**: Refined the Sidebar and Header layouts with improved glassmorphism and subtle micro-animations (e.g., `animate-float`).
+
+### Fixed
+- **Security Hardening**: Standardized backend authentication error messages to a generic "Invalid credentials" to prevent potential account enumeration.
+- **Environment Awareness**: Improved API host resolution logic in the login flow to support diverse local development environments.
+
+---
+
 ## [0.1.2] - 2026-04-22
 
 ### Added
@@ -28,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Icon Redundancy**: Cleaned up the appearance dropdown by removing unnecessary checkmark icons for a cleaner, minimalist aesthetic.
 
 ---
+
 ## [0.1.1] - 2026-04-22
 
 ### Added

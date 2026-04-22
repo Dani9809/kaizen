@@ -41,7 +41,10 @@ export class AdminService {
   async updateUserStatus(accountId: number, statusId: number) {
     return this.prisma.account.update({
       where: { account_id: accountId },
-      data: { account_status_id: statusId }
+      data: { 
+        account_status_id: statusId,
+        account_updated: new Date()
+      }
     });
   }
 
@@ -69,7 +72,10 @@ export class AdminService {
 
     return this.prisma.account.update({
       where: { account_id: id },
-      data: updateData,
+      data: {
+        ...updateData,
+        account_updated: new Date()
+      },
       include: {
         status: true,
         tier: true,
@@ -79,7 +85,6 @@ export class AdminService {
   }
 
   async deleteUser(accountId: number) {
-    // Note: ON DELETE CASCADE should handle related records if configured in Prisma
     return this.prisma.account.delete({
       where: { account_id: accountId }
     });

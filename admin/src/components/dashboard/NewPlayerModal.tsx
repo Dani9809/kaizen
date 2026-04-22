@@ -19,7 +19,7 @@ import {
   X,
   ShieldAlert
 } from "lucide-react";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { generatePassword, validatePassword } from "@/lib/password";
 import { Modal } from "@/components/ui/Modal";
@@ -317,11 +317,11 @@ export default function NewPlayerModal({ isOpen, onClose, onSuccess }: NewPlayer
                 <p className="text-[10px] font-black uppercase tracking-widest text-secondary mb-2">Account Defaults</p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs text-foreground/40">Initial Streak</p>
+                    <p className="text-xs text-muted-foreground">Initial Streak</p>
                     <p className="font-bold text-sm">0 Days</p>
                   </div>
                   <div>
-                    <p className="text-xs text-foreground/40">Freeze Status</p>
+                    <p className="text-xs text-muted-foreground">Freeze Status</p>
                     <p className="font-bold text-sm text-amber-500">Available</p>
                   </div>
                 </div>
@@ -385,14 +385,14 @@ export default function NewPlayerModal({ isOpen, onClose, onSuccess }: NewPlayer
                     ) : (
                       <Circle className="w-3 h-3 text-foreground/20" />
                     )}
-                    <span className={`text-[10px] font-bold uppercase tracking-tight ${passwordValidation[req.key as keyof typeof passwordValidation] ? 'text-foreground' : 'text-foreground/30'}`}>
+                    <span className={`text-[10px] font-bold uppercase tracking-tight ${passwordValidation[req.key as keyof typeof passwordValidation] ? 'text-foreground' : 'text-muted-foreground/50'}`}>
                       {req.label}
                     </span>
                   </div>
                 ))}
               </div>
 
-              <p className="text-[10px] text-foreground/30 mt-2 italic">* Password will be hashed with 12 rounds before storage.</p>
+              <p className="text-[10px] text-muted-foreground/80 mt-2 italic">* Password will be hashed with 12 rounds before storage.</p>
             </div>
           )}
 
@@ -403,7 +403,7 @@ export default function NewPlayerModal({ isOpen, onClose, onSuccess }: NewPlayer
                   <Zap className="w-8 h-8 text-secondary fill-secondary" />
                 </div>
                 <h4 className="font-heading font-black text-xl uppercase tracking-tight text-foreground">Starting Economy</h4>
-                <p className="text-sm text-foreground/40 mt-1 max-w-xs">Set the initial currency balance for this player's journey.</p>
+                <p className="text-sm text-muted-foreground mt-1 max-w-xs">Set the initial currency balance for this player's journey.</p>
               </div>
 
               <Input
@@ -422,7 +422,7 @@ export default function NewPlayerModal({ isOpen, onClose, onSuccess }: NewPlayer
               />
 
               <div className="space-y-2">
-                 <p className="text-[10px] font-black uppercase tracking-widest text-foreground/40 ml-1">Quick Presets</p>
+                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Quick Presets</p>
                  <CurrencyPresets 
                    presets={[500, 1000, 10000, 100000, 1000000]}
                    currentValue={formData.currency_balance}
@@ -442,22 +442,22 @@ export default function NewPlayerModal({ isOpen, onClose, onSuccess }: NewPlayer
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-4">
                      <div>
-                        <p className="text-[10px] text-foreground/40 uppercase font-black">Account Info</p>
+                        <p className="text-[10px] text-muted-foreground uppercase font-black">Account Info</p>
                         <p className="text-sm font-bold">{metadata.types.find(t => t.type_id === Number(formData.type_id))?.type_name} • {metadata.tiers.find(t => t.subscription_tier_id === Number(formData.subscription_tier_id))?.subscription_tier_name}</p>
                      </div>
                      <div>
-                        <p className="text-[10px] text-foreground/40 uppercase font-black">Security</p>
+                        <p className="text-[10px] text-muted-foreground uppercase font-black">Security</p>
                         <p className="text-sm font-bold">{formData.username}</p>
                         <p className="text-xs text-foreground/60">{formData.email}</p>
                      </div>
                   </div>
                   <div className="space-y-4">
                      <div>
-                        <p className="text-[10px] text-foreground/40 uppercase font-black">Economy</p>
+                        <p className="text-[10px] text-muted-foreground uppercase font-black">Economy</p>
                         <p className="text-sm font-black text-secondary">{Number(formData.currency_balance || 0).toLocaleString()} KAI</p>
                      </div>
                      <div>
-                        <p className="text-[10px] text-foreground/40 uppercase font-black">Status</p>
+                        <p className="text-[10px] text-muted-foreground uppercase font-black">Status</p>
                         <Badge variant="success" dot>Active</Badge>
                      </div>
                   </div>
