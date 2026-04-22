@@ -1,0 +1,460 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. Core & Account Tables
+
+model AccountStatus {
+  account_status_id   Int       @id @default(autoincrement())
+  account_status_name String    @unique
+  accounts            Account[]
+
+  @@map("ACCOUNT_STATUS")
+}
+
+model SubscriptionTier {
+  subscription_tier_id   Int       @id @default(autoincrement())
+  subscription_tier_name String    @unique
+  monthly_price          Decimal   @db.Decimal(13, 2)
+  max_active_groups      Int
+  max_custom_tasks       Int
+  accounts               Account[]
+
+  @@map("SUBSCRIPTION_TIER")
+}
+
+model Account {
+  account_id           Int               @id @default(autoincrement())
+  account_status_id    Int
+  subscription_tier_id Int
+  username             String            @unique
+  email                String            @unique
+  password             String
+  currency_balance     Decimal           @default(0.00) @db.Decimal(13, 2)
+  current_streak       Int               @default(0)
+  last_freeze_used_date DateTime?         @db.Date
+  longest_streak       Int               @default(0)
+  account_created      DateTime          @default(now())
+  account_updated      DateTime          @updatedAt
+  
+  status               AccountStatus     @relation(fields: [account_status_id], references: [account_status_id])
+  tier                 SubscriptionTier  @relation(fields: [subscription_tier_id], references: [subscription_tier_id])
+  
+  group_memberships    GroupMember[]
+  sent_nudges          Nudge[]           @relation("SentNudges")
+  received_nudges      Nudge[]           @relation("ReceivedNudges")
+  reflections          Reflection[]
+  user_quests          UserQuest[]
+  group_quest_logs     GroupQuestMemberLog[]
+  user_task_templates  UserTaskTemplate[]
+  group_task_logs      GroupTaskMemberLog[]
+  user_inventory       UserInventory[]
+  user_pet_details     UserPetDetail[]
+
+  @@map("ACCOUNT")
+}
+
+model Role {
+  role_id   Int           @id @default(autoincrement())
+  role_name String        @unique
+  members   GroupMember[]
+
+  @@map("ROLE")
+}
+
+// 2. Group & Social Tables
+
+model Group {
+  group_id             Int                  @id @default(autoincrement())
+  group_name           String
+  group_streak         Int                  @default(0)
+  last_freeze_used_date DateTime?            @db.Date
+  longest_streak       Int                  @default(0)
+  isSharable           Boolean              @default(true)
+  group_created        DateTime             @default(now())
+  
+  members              GroupMember[]
+  quest_instances      GroupQuestInstance[]
+  task_templates       GroupTaskTemplate[]
+  inventory            GroupInventory[]
+  pet_details          GroupPetDetail[]
+
+  @@map("GROUP")
+}
+
+model GroupMember {
+  group_member_id Int      @id @default(autoincrement())
+  group_id        Int
+  account_id      Int
+  role_id         Int
+  joined_at       DateTime @default(now())
+  
+  group           Group    @relation(fields: [group_id], references: [group_id])
+  account         Account  @relation(fields: [account_id], references: [account_id])
+  role            Role     @relation(fields: [role_id], references: [role_id])
+
+  @@map("GROUP_MEMBER")
+}
+
+model Nudge {
+  nudge_id            Int      @id @default(autoincrement())
+  account_sender_id   Int
+  account_receiver_id Int
+  message             String   @db.Text
+  created_at          DateTime @default(now())
+  
+  sender              Account  @relation("SentNudges", fields: [account_sender_id], references: [account_id])
+  receiver            Account  @relation("ReceivedNudges", fields: [account_receiver_id], references: [account_id])
+
+  @@map("NUDGE")
+}
+
+// 3. Reflections & Mood
+
+model Mood {
+  mood_id          Int          @id @default(autoincrement())
+  mood_label       String       @unique
+  mood_description String?      @db.Text
+  reflections      Reflection[]
+
+  @@map("MOOD")
+}
+
+model Reflection {
+  reflection_id Int      @id @default(autoincrement())
+  mood_id       Int
+  account_id    Int
+  content       String   @db.Text
+  created_at    DateTime @default(now())
+  
+  mood          Mood     @relation(fields: [mood_id], references: [mood_id])
+  account       Account  @relation(fields: [account_id], references: [account_id])
+
+  @@map("REFLECTION")
+}
+
+// 4. Quests
+
+model QuestType {
+  quest_type_id          Int     @id @default(autoincrement())
+  quest_type_name        String  @unique
+  quest_type_description String? @db.Text
+  quests                 Quest[]
+
+  @@map("QUEST_TYPE")
+}
+
+model Quest {
+  quest_id      Int                  @id @default(autoincrement())
+  quest_type_id Int?
+  title         String
+  description   String?              @db.Text
+  reward_amount Int
+  
+  type            QuestType?           @relation(fields: [quest_type_id], references: [quest_type_id])
+  group_instances GroupQuestInstance[]
+  user_quests     UserQuest[]
+
+  @@map("QUEST")
+}
+
+model GroupQuestInstance {
+  group_quest_instance_id Int      @id @default(autoincrement())
+  quest_id                Int
+  group_id                Int
+  assigned_date           DateTime @db.Date
+  quest_status            String
+  
+  quest                   Quest    @relation(fields: [quest_id], references: [quest_id])
+  group                   Group    @relation(fields: [group_id], references: [group_id])
+  member_logs             GroupQuestMemberLog[]
+
+  @@map("GROUP_QUEST_INSTANCE")
+}
+
+model GroupQuestMemberLog {
+  group_quest_member_log_id Int      @id @default(autoincrement())
+  group_quest_instance_id   Int
+  account_id                Int
+  quest_status              String
+  completed_at              DateTime?
+
+  instance                  GroupQuestInstance @relation(fields: [group_quest_instance_id], references: [group_quest_instance_id])
+  account                   Account            @relation(fields: [account_id], references: [account_id])
+
+  @@map("GROUP_QUEST_MEMBER_LOG")
+}
+
+model UserQuest {
+  user_quest_id Int      @id @default(autoincrement())
+  quest_id      Int
+  account_id    Int
+  assigned_date DateTime @db.Date
+  quest_status  String
+  
+  quest         Quest    @relation(fields: [quest_id], references: [quest_id])
+  account       Account  @relation(fields: [account_id], references: [account_id])
+
+  @@map("USER_QUEST")
+}
+
+// 5. Tasks & Scheduling
+
+model TaskStatus {
+  task_status_id     Int                  @id @default(autoincrement())
+  status_name        String               @unique
+  status_description String?              @db.Text
+  group_instances    GroupTaskInstance[]
+  group_member_logs  GroupTaskMemberLog[]
+  user_instances     UserTaskInstance[]
+
+  @@map("TASK_STATUS")
+}
+
+model GroupTaskTemplate {
+  group_task_template_id Int      @id @default(autoincrement())
+  group_id               Int
+  title                  String
+  frequency_type         String
+  requires_all_members   Boolean  @default(true)
+  
+  group                  Group    @relation(fields: [group_id], references: [group_id])
+  schedules              GroupTaskSchedule[]
+  instances              GroupTaskInstance[]
+
+  @@map("GROUP_TASK_TEMPLATE")
+}
+
+model GroupTaskSchedule {
+  group_task_schedule_id Int @id @default(autoincrement())
+  group_task_template_id Int
+  day_of_week            Int
+  
+  template               GroupTaskTemplate @relation(fields: [group_task_template_id], references: [group_task_template_id])
+
+  @@map("GROUP_TASK_SCHEDULE")
+}
+
+model GroupTaskInstance {
+  group_task_instance_id Int       @id @default(autoincrement())
+  group_task_template_id Int
+  task_status_id         Int
+  due_date               DateTime  @db.Date
+  group_completed_at     DateTime?
+  
+  template               GroupTaskTemplate @relation(fields: [group_task_template_id], references: [group_task_template_id])
+  status                 TaskStatus        @relation(fields: [task_status_id], references: [task_status_id])
+  member_logs            GroupTaskMemberLog[]
+
+  @@map("GROUP_TASK_INSTANCE")
+}
+
+model GroupTaskMemberLog {
+  group_task_member_log_id Int       @id @default(autoincrement())
+  group_task_instance_id   Int
+  task_status_id           Int
+  account_id               Int
+  completed_at             DateTime?
+  
+  instance                 GroupTaskInstance @relation(fields: [group_task_instance_id], references: [group_task_instance_id])
+  status                   TaskStatus        @relation(fields: [task_status_id], references: [task_status_id])
+  account                  Account           @relation(fields: [account_id], references: [account_id])
+
+  @@map("GROUP_TASK_MEMBER_LOG")
+}
+
+model UserTaskTemplate {
+  user_task_template_id Int      @id @default(autoincrement())
+  account_id            Int
+  title                 String
+  frequency_type        String
+  
+  account               Account  @relation(fields: [account_id], references: [account_id])
+  schedules             UserTaskSchedule[]
+  instances             UserTaskInstance[]
+
+  @@map("USER_TASK_TEMPLATE")
+}
+
+model UserTaskSchedule {
+  user_task_schedule_id Int @id @default(autoincrement())
+  user_task_template_id Int
+  day_of_week           Int
+  
+  template              UserTaskTemplate @relation(fields: [user_task_template_id], references: [user_task_template_id])
+
+  @@map("USER_TASK_SCHEDULE")
+}
+
+model UserTaskInstance {
+  user_task_instance_id Int       @id @default(autoincrement())
+  user_task_template_id Int
+  task_status_id        Int
+  due_date              DateTime  @db.Date
+  completed_at          DateTime?
+  
+  template              UserTaskTemplate @relation(fields: [user_task_template_id], references: [user_task_template_id])
+  status                TaskStatus       @relation(fields: [task_status_id], references: [task_status_id])
+
+  @@map("USER_TASK_INSTANCE")
+}
+
+// 6. Shop & Inventory
+
+model ShopItemType {
+  shop_item_type_id     Int        @id @default(autoincrement())
+  item_type_name        String     @unique
+  item_type_description String?    @db.Text
+  items                 ShopItem[]
+
+  @@map("SHOP_ITEM_TYPE")
+}
+
+model ShopItem {
+  shop_item_id      Int             @id @default(autoincrement())
+  shop_item_type_id Int
+  item_name         String
+  item_description  String?         @db.Text
+  item_price        Int
+  
+  type              ShopItemType    @relation(fields: [shop_item_type_id], references: [shop_item_type_id])
+  group_inventories GroupInventory[]
+  user_inventories  UserInventory[]
+
+  @@map("SHOP_ITEM")
+}
+
+model GroupInventory {
+  group_inventory_id Int @id @default(autoincrement())
+  group_id           Int
+  shop_item_id       Int
+  quantity           Int @default(0)
+  
+  group              Group    @relation(fields: [group_id], references: [group_id])
+  item               ShopItem @relation(fields: [shop_item_id], references: [shop_item_id])
+
+  @@map("GROUP_INVENTORY")
+}
+
+model UserInventory {
+  user_inventory_id Int @id @default(autoincrement())
+  account_id        Int
+  shop_item_id      Int
+  quantity          Int @default(0)
+  
+  account           Account  @relation(fields: [account_id], references: [account_id])
+  item              ShopItem @relation(fields: [shop_item_id], references: [shop_item_id])
+
+  @@map("USER_INVENTORY")
+}
+
+// 7. Pet System
+
+model SpeciesCategory {
+  species_category_id          Int       @id @default(autoincrement())
+  species_category_name        String    @unique
+  species_category_description String?   @db.Text
+  species                      Species[]
+
+  @@map("SPECIES_CATEGORY")
+}
+
+model SpeciesLevel {
+  species_level_id          Int       @id @default(autoincrement())
+  species_level_name        String    @unique
+  species_level_description String?   @db.Text
+  species                   Species[]
+
+  @@map("SPECIES_LEVEL")
+}
+
+model Species {
+  species_id          Int      @id @default(autoincrement())
+  species_category_id Int
+  species_level_id    Int
+  species_name        String
+  species_max_level   Int
+  
+  category            SpeciesCategory @relation(fields: [species_category_id], references: [species_category_id])
+  level               SpeciesLevel    @relation(fields: [species_level_id], references: [species_level_id])
+  pets                Pet[]
+
+  @@map("SPECIES")
+}
+
+model Pet {
+  pet_id          Int           @id @default(autoincrement())
+  species_id      Int
+  pet_name        String
+  pet_description String?       @db.Text
+  isForSale       Boolean       @default(true)
+  pet_price       Decimal       @db.Decimal(13, 2)
+  
+  species         Species       @relation(fields: [species_id], references: [species_id])
+  group_pets      GroupPet[]
+  user_pets       UserPet[]
+
+  @@map("PET")
+}
+
+model GroupPet {
+  group_pet_id     Int       @id @default(autoincrement())
+  pet_id           Int
+  name             String
+  current_level    Int       @default(1)
+  health           Int       @default(100)
+  isEquipped       Boolean   @default(false)
+  last_equipped_at DateTime?
+  owned_at         DateTime  @default(now())
+  
+  pet              Pet       @relation(fields: [pet_id], references: [pet_id])
+  details          GroupPetDetail[]
+
+  @@map("GROUP_PET")
+}
+
+model GroupPetDetail {
+  group_pet_detail_id Int @id @default(autoincrement())
+  group_pet_id        Int
+  group_id            Int
+  
+  group_pet           GroupPet @relation(fields: [group_pet_id], references: [group_pet_id])
+  group               Group    @relation(fields: [group_id], references: [group_id])
+
+  @@map("GROUP_PET_DETAIL")
+}
+
+model UserPet {
+  user_pet_id      Int       @id @default(autoincrement())
+  pet_id           Int
+  name             String
+  current_level    Int       @default(1)
+  health           Int       @default(100)
+  isEquipped       Boolean   @default(false)
+  last_equipped_at DateTime?
+  owned_at         DateTime  @default(now())
+  
+  pet              Pet       @relation(fields: [pet_id], references: [pet_id])
+  details          UserPetDetail[]
+
+  @@map("USER_PET")
+}
+
+model UserPetDetail {
+  user_pet_detail_id Int @id @default(autoincrement())
+  user_pet_id        Int
+  account_id         Int
+  
+  user_pet           UserPet @relation(fields: [user_pet_id], references: [user_pet_id])
+  account            Account @relation(fields: [account_id], references: [account_id])
+
+  @@map("USER_PET_DETAIL")
+}
