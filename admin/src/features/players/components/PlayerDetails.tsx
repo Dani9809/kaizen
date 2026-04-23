@@ -40,6 +40,7 @@ import { PasswordField } from "@/components/ui/PasswordField";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { CurrencyPresets, CURRENCY_PRESETS } from "@/components/ui/CurrencyPresets";
 import { generatePassword, validatePassword } from "@/lib/password";
+import { DetailsHeader } from "@/components/ui/DetailsHeader";
 
 interface PlayerDetailsProps {
   id: string | number;
@@ -216,49 +217,30 @@ export default function PlayerDetails({ id }: PlayerDetailsProps) {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BackButton href="/dashboard?view=users" />
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-black text-foreground font-heading uppercase tracking-tight">
-                {player.username}
-              </h1>
-              <Badge variant={player.status?.account_status_name === 'Active' ? "success" : "danger"}>
-                {player.status?.account_status_name}
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground font-medium flex flex-wrap items-center gap-x-4 gap-y-1 mt-0.5">
-              <span className="flex items-center gap-1.5">
-                <Calendar className="w-3 h-3" /> Joined {new Date(player.account_created).toLocaleDateString()}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Clock className="w-3 h-3" /> Updated {new Date(player.account_updated).toLocaleDateString()}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Mail className="w-3 h-3" /> {player.email}
-              </span>
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Button 
-            variant={isEditMode ? "secondary" : "gradient"} 
-            size="sm" 
-            className="flex-1 sm:flex-none font-bold text-[10px] uppercase gap-2"
-            onClick={() => setIsEditMode(!isEditMode)}
-          >
-            {isEditMode ? "Cancel" : <><Edit2 className="w-3.5 h-3.5" /> Edit Profile</>}
-          </Button>
-          <Button 
-            variant="primary" 
-            size="sm" 
-            className="flex-1 sm:flex-none font-bold text-[10px] uppercase gap-2"
-          >
-            <MessageSquare className="w-3.5 h-3.5" /> Message
-          </Button>
-        </div>
-      </div>
+      <DetailsHeader
+        title={player.username}
+        backHref="/dashboard?view=users"
+        badgeText={player.status?.account_status_name}
+        badgeVariant={player.status?.account_status_name === 'Active' ? "success" : "danger"}
+        metaItems={[
+          { icon: Calendar, label: "Joined", value: new Date(player.account_created).toLocaleDateString() },
+          { icon: Clock, label: "Updated", value: new Date(player.account_updated).toLocaleDateString() },
+          { icon: Mail, label: "", value: player.email },
+        ]}
+        actions={[
+          {
+            label: isEditMode ? "Cancel" : "Edit Profile",
+            icon: Edit2,
+            variant: isEditMode ? "secondary" : "gradient",
+            onClick: () => setIsEditMode(!isEditMode)
+          },
+          {
+            label: "Message",
+            icon: MessageSquare,
+            variant: "primary"
+          }
+        ]}
+      />
 
       {/* Tabs */}
       <div className="flex items-center gap-1 p-1 bg-secondary/5 rounded-2xl w-full sm:w-fit border border-secondary/10 overflow-x-auto custom-scrollbar no-scrollbar">
@@ -292,12 +274,14 @@ export default function PlayerDetails({ id }: PlayerDetailsProps) {
                       <Input
                         label="Username"
                         icon={User}
+                        maxLength={20}
                         value={formData.username}
                         onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                       />
                       <Input
                         label="Email Address"
                         icon={Mail}
+                        maxLength={100}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       />

@@ -87,6 +87,14 @@ const ENTITY_CONFIGS: Record<string, any> = {
       { key: "quest_type_description", label: "Description" },
     ],
   },
+  "mood": {
+    title: "Moods",
+    endpoint: "/admin/gamification/mood",
+    columns: [
+      { key: "mood_label", label: "Label", bold: true },
+      { key: "mood_description", label: "Description" },
+    ],
+  },
 };
 
 export default function GameManagement({ entity }: GameManagementProps) {
@@ -96,7 +104,7 @@ export default function GameManagement({ entity }: GameManagementProps) {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<any>(null);
-  const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; id: number | null }>({ isOpen: false, id: null });
+  const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; id: number | null; label: string }>({ isOpen: false, id: null, label: "" });
 
   const fetchData = useCallback(async () => {
     if (!config) return;
@@ -121,7 +129,7 @@ export default function GameManagement({ entity }: GameManagementProps) {
       await apiFetch(`${config.endpoint}/${confirmDelete.id}`, { method: "DELETE" });
       toast.success(`${entity} deleted successfully`);
       fetchData();
-      setConfirmDelete({ isOpen: false, id: null });
+      setConfirmDelete({ isOpen: false, id: null, label: "" });
     } catch (err) {
       toast.error(`Deletion failed. This item might be in use.`);
     }
@@ -218,7 +226,11 @@ export default function GameManagement({ entity }: GameManagementProps) {
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button 
-                        onClick={() => setConfirmDelete({ isOpen: true, id: item.id || item[`${entity.replace(/-/g, '_')}_id`] })}
+                        onClick={() => setConfirmDelete({ 
+                          isOpen: true, 
+                          id: item.id || item[`${entity.replace(/-/g, '_')}_id`],
+                          label: item.mood_label || item.pet_name || item.species_name || item.item_name || item.title || item.quest_type_name || item.species_level_name || item.species_category_name || "this item"
+                        })}
                         className="p-1.5 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg text-muted-foreground hover:text-red-500 transition-all"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -248,10 +260,10 @@ export default function GameManagement({ entity }: GameManagementProps) {
 
       <ConfirmationModal 
         isOpen={confirmDelete.isOpen}
-        onClose={() => setConfirmDelete({ isOpen: false, id: null })}
+        onClose={() => setConfirmDelete({ isOpen: false, id: null, label: "" })}
         onConfirm={handleDelete}
         title="Confirm Deletion"
-        description="Are you sure you want to delete this item? This action might fail if it's referenced by other entities."
+        description={`Are you sure you want to delete "${confirmDelete.label}"? This action might fail if it's referenced by other entities.`}
         variant="danger"
         confirmLabel="Delete"
       />

@@ -155,6 +155,7 @@ export default function CreateGroupModal({ isOpen, onClose, onSuccess }: CreateG
                   placeholder="e.g. Phoenix Vanguard"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  maxLength={40}
                   className="font-bold"
                 />
               </div>
@@ -196,6 +197,7 @@ export default function CreateGroupModal({ isOpen, onClose, onSuccess }: CreateG
                   placeholder="Filter potential members..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  maxLength={50}
                   className="bg-secondary/5"
                 />
                 <div className="space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">

@@ -11,7 +11,8 @@ import {
   Trophy,
   ArrowRight,
   Sparkles,
-  LayoutGrid
+  LayoutGrid,
+  Smile
 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 
@@ -79,6 +80,14 @@ const entities = [
     icon: Trophy,
     color: "text-yellow-500",
     bg: "bg-yellow-500/10",
+  },
+  {
+    id: "game/mood",
+    name: "Mood",
+    description: "Manage emotional tracking labels for user reflections.",
+    icon: Smile,
+    color: "text-rose-500",
+    bg: "bg-rose-500/10",
   },
 ];
 

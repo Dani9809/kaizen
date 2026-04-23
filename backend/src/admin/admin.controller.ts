@@ -3,6 +3,8 @@ import { AdminService } from './admin.service';
 import { AdminGuard } from '../auth/guards/admin.guard';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateSubscriptionTierDto } from './dto/update-subscription-tier.dto';
+import { UpdateMoodDto } from './dto/update-mood.dto';
 
 @Controller('admin')
 @UseGuards(AdminGuard)
@@ -25,8 +27,11 @@ export class AdminController {
   }
 
   @Get('users')
-  async getUsers() {
-    return this.adminService.getAllUsers();
+  async getUsers(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.adminService.getAllUsers(Number(page) || 1, Number(limit) || 10);
   }
 
   @Get('users/:id')
@@ -61,8 +66,11 @@ export class AdminController {
   }
 
   @Get('groups')
-  async getGroups() {
-    return this.adminService.getAllGroups();
+  async getGroups(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.adminService.getAllGroups(Number(page) || 1, Number(limit) || 10);
   }
 
   @Get('groups/:id')
@@ -107,5 +115,51 @@ export class AdminController {
   @Delete('groups/members/:memberId')
   async removeMember(@Param('memberId', ParseIntPipe) memberId: number) {
     return this.adminService.removeGroupMember(memberId);
+  }
+  
+  @Get('subscriptions/tiers')
+  async getSubscriptionTiers() {
+    return this.adminService.getAllSubscriptionTiers();
+  }
+
+  @Post('subscriptions/tiers')
+  async createSubscriptionTier(@Body() dto: UpdateSubscriptionTierDto) {
+    return this.adminService.createSubscriptionTier(dto);
+  }
+
+  @Patch('subscriptions/tiers/:id')
+  async updateSubscriptionTier(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateSubscriptionTierDto,
+  ) {
+    return this.adminService.updateSubscriptionTier(id, dto);
+  }
+
+  @Delete('subscriptions/tiers/:id')
+  async deleteSubscriptionTier(@Param('id', ParseIntPipe) id: number) {
+    return this.adminService.deleteSubscriptionTier(id);
+  }
+
+  @Get('gamification/mood')
+  async getMoods() {
+    return this.adminService.getAllMoods();
+  }
+
+  @Post('gamification/mood')
+  async createMood(@Body() dto: UpdateMoodDto) {
+    return this.adminService.createMood(dto);
+  }
+
+  @Patch('gamification/mood/:id')
+  async updateMood(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateMoodDto,
+  ) {
+    return this.adminService.updateMood(id, dto);
+  }
+
+  @Delete('gamification/mood/:id')
+  async deleteMood(@Param('id', ParseIntPipe) id: number) {
+    return this.adminService.deleteMood(id);
   }
 }

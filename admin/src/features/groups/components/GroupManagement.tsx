@@ -21,6 +21,8 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import CreateGroupModal from "./CreateGroupModal";
+import { Pagination } from "@/components/ui/Pagination";
+import { apiFetch } from "@/lib/api";
 
 export default function GroupManagement() {
   const router = useRouter();
@@ -29,12 +31,24 @@ export default function GroupManagement() {
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1
+  });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  const loadGroups = useCallback(async () => {
+  const loadGroups = useCallback(async (page: number = 1, limit: number = 10) => {
     try {
-      const data = await fetchGroups();
-      setGroups(data);
+      const response = await apiFetch(`/admin/groups?page=${page}&limit=${limit}`);
+      setGroups(response.data);
+      setPagination({
+        total: response.total,
+        page: response.page,
+        limit: response.limit,
+        totalPages: response.totalPages
+      });
     } catch (err) {
       toast.error("Failed to fetch squads");
     } finally {
@@ -43,8 +57,20 @@ export default function GroupManagement() {
   }, []);
 
   useEffect(() => {
-    loadGroups();
-  }, [loadGroups]);
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    setPagination(prev => ({ ...prev, page, limit }));
+  }, [searchParams]);
+
+  useEffect(() => {
+    loadGroups(pagination.page, pagination.limit);
+  }, [loadGroups, pagination.page, pagination.limit]);
+
+  const handlePageChange = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
 
   const handleGroupClick = (id: number) => {
     router.push(`/dashboard?view=squads/id=${id}`);
@@ -107,7 +133,9 @@ export default function GroupManagement() {
                       <div className="w-9 h-9 bg-secondary/10 rounded-xl flex items-center justify-center border border-secondary/20 group-hover:scale-110 transition-transform">
                         <Target className="w-5 h-5 text-secondary" />
                       </div>
-                      <p className="text-sm font-bold text-foreground">{group.group_name}</p>
+                      <p className="text-sm font-bold text-foreground truncate max-w-[150px]" title={group.group_name}>
+                        {group.group_name}
+                      </p>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -165,6 +193,13 @@ export default function GroupManagement() {
               <div className="w-8 h-8 border-4 border-secondary border-t-transparent rounded-full animate-spin" />
             </div>
           )}
+          <Pagination 
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            totalItems={pagination.total}
+            limit={pagination.limit}
+            onPageChange={handlePageChange}
+          />
         </div>
       </Card>
 

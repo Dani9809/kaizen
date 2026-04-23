@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import NewPlayerModal from "./NewPlayerModal";
 import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
+import { Pagination } from "@/components/ui/Pagination";
 
 export default function UserManagement() {
   const router = useRouter();
@@ -31,6 +32,12 @@ export default function UserManagement() {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [confirmConfig, setConfirmConfig] = useState<{
     isOpen: boolean;
@@ -48,10 +55,14 @@ export default function UserManagement() {
     confirmLabel: "Confirm",
   });
 
-  // Sync modal state with URL
+  // Sync modal and pagination state with URL
   useEffect(() => {
     const action = searchParams.get("action");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
     
+    setPagination(prev => ({ ...prev, page, limit }));
+
     if (action === "add-player") {
       setIsModalOpen(true);
     } else {
@@ -81,10 +92,16 @@ export default function UserManagement() {
     router.push(`/dashboard?view=users`, { scroll: false });
   };
 
-  const fetchUsers = useCallback(async () => {
+  const fetchUsers = useCallback(async (page: number = 1, limit: number = 10) => {
     try {
-      const data = await apiFetch("/admin/users");
-      setUsers(data);
+      const response = await apiFetch(`/admin/users?page=${page}&limit=${limit}`);
+      setUsers(response.data);
+      setPagination({
+        total: response.total,
+        page: response.page,
+        limit: response.limit,
+        totalPages: response.totalPages
+      });
     } catch (err) {
       toast.error("Failed to fetch players");
     } finally {
@@ -93,8 +110,14 @@ export default function UserManagement() {
   }, []);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    fetchUsers(pagination.page, pagination.limit);
+  }, [fetchUsers, pagination.page, pagination.limit]);
+
+  const handlePageChange = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
 
   const handleStatusUpdate = async (accountId: number, statusId: number) => {
     const isSuspending = statusId === 2;
@@ -200,7 +223,7 @@ export default function UserManagement() {
             <thead>
               <tr className="bg-secondary/5 border-b border-secondary/10">
                 <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Player Profile</th>
-                <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Rank/Type</th>
+                <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Tier</th>
                 <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Status</th>
                 <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest">Currency</th>
                 <th className="px-6 py-4 text-[10px] font-black text-muted-foreground uppercase tracking-widest text-right">Actions</th>
@@ -218,23 +241,19 @@ export default function UserManagement() {
                       <div className="w-9 h-9 bg-secondary/10 rounded-xl flex items-center justify-center border border-secondary/20 group-hover:scale-110 transition-transform">
                         <UserCheck className="w-5 h-5 text-secondary" />
                       </div>
-                      <div>
-                        <p className="text-sm font-bold text-foreground">{user.username}</p>
-                        <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-                          <Mail className="w-3 h-3" /> {user.email}
+                      <div className="min-w-0 max-w-[200px]">
+                        <p className="text-sm font-bold text-foreground truncate" title={user.username}>{user.username}</p>
+                        <p className="text-[10px] text-muted-foreground flex items-center gap-1 truncate" title={user.email}>
+                          <Mail className="w-3 h-3 shrink-0" /> {user.email}
                         </p>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-1.5">
-                      {user.type?.type_name === 'Admin' ? (
-                        <ShieldAlert className="w-3.5 h-3.5 text-amber-500" />
-                      ) : (
-                        <Shield className="w-3.5 h-3.5 text-blue-500" />
-                      )}
+                      <Shield className="w-3.5 h-3.5 text-secondary" />
                       <span className="text-[11px] font-black uppercase tracking-tight text-foreground/80">
-                        {user.type?.type_name || "MEMBER"}
+                        {user.tier?.subscription_tier_name || "FREE"}
                       </span>
                     </div>
                   </td>
@@ -291,6 +310,13 @@ export default function UserManagement() {
                <p className="font-black text-xs uppercase tracking-widest">No players found</p>
             </div>
           )}
+          <Pagination 
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            totalItems={pagination.total}
+            limit={pagination.limit}
+            onPageChange={handlePageChange}
+          />
         </div>
       </Card>
     </div>

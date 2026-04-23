@@ -8,6 +8,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+## [0.1.7] - 2026-04-23
+
+### Added
+- **Subscription Tier Management**: Implemented full CRUD lifecycle for platform access levels, including custom pricing and feature limits.
+- **Mood Tracking Engine**: Added administrative management for mood tracking labels used in user reflections and emotional analytics.
+- **Dynamic Confirmation Modals**: Enhanced all administrative deletion workflows with item-specific context (e.g., "Delete [Item Name]") to prevent accidental data loss.
+
+### Changed
+- **Admin Sidebar Refactoring**: Reorganized navigation to group game-related entities and ensured "Settings" remains as the final menu item.
+- **UI Scaling & Accessibility**: Upscaled administrative action buttons and icons (Trash, New Tier) for improved visibility and touch targets.
+- **Interactivity Overhaul**: Enabled direct card-based interaction for subscription tiers, replacing redundant edit buttons with a unified clickable area.
+
+### Fixed
+- **Input Sanitization**: Implemented mandatory backend string sanitization across all administrative endpoints to prevent XSS and injection.
+- **Entity Protection**: Hardcoded safety locks for default system entities (e.g., "Free" subscription tier) to prevent accidental deletion.
+
+---
 ## [0.1.6] - 2026-04-23
 
 ### Added

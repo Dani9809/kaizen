@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString, MinLength, Min } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsString, MinLength, MaxLength, Matches, Min } from 'class-validator';
 
 export class CreatePlayerDto {
   @IsNumber()
@@ -16,10 +16,13 @@ export class CreatePlayerDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
+  @MaxLength(20)
+  @Matches(/^[a-zA-Z0-9_-]+$/, { message: 'Username can only contain alphanumeric characters, underscores, and hyphens' })
   username: string;
 
   @IsEmail()
   @IsNotEmpty()
+  @MaxLength(100)
   email: string;
 
   @IsString()

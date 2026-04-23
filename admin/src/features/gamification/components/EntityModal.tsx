@@ -58,6 +58,10 @@ const FIELD_CONFIGS: Record<string, any[]> = {
     { name: "quest_type_name", label: "Type Name", type: "text", required: true },
     { name: "quest_type_description", label: "Description", type: "textarea" },
   ],
+  "mood": [
+    { name: "mood_label", label: "Mood Label", type: "text", required: true },
+    { name: "mood_description", label: "Description", type: "textarea", required: true },
+  ],
 };
 
 export default function EntityModal({ isOpen, onClose, onSuccess, entity, item }: EntityModalProps) {

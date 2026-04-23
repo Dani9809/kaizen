@@ -13,7 +13,8 @@ import {
   PanelLeftOpen,
   Zap,
   ChevronDown,
-  LucideIcon
+  LucideIcon,
+  CreditCard
 } from "lucide-react";
 
 interface NavItem {
@@ -70,6 +71,7 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
     { id: "game/shop-item", name: "Shop Item" },
     { id: "game/quest-type", name: "Quest Type" },
     { id: "game/quest", name: "Quest" },
+    { id: "game/mood", name: "Mood" },
   ];
 
   const isGameActive = activeView === "game" || activeView.startsWith("game/");
@@ -132,99 +134,118 @@ export const Sidebar = ({ isOpen, onToggle, isMobileOpen, onCloseMobile, onLogou
       </div>
 
       <div className="px-3 py-4 flex-1 space-y-1 overflow-y-auto custom-scrollbar">
-        {navItems.map((item) => {
-          if (item.id === "settings") {
-            return (
-              <React.Fragment key="game-management">
-                <div className="pt-2 pb-1 px-3">
-                  <p className={`text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 ${(!isOpen && !isMobileOpen) ? "hidden" : "block"}`}>
-                    Game Engine
-                  </p>
-                </div>
-                <div>
-                  <button
-                    onClick={() => handleNavClick("game")}
-                    className={`
-                      w-full flex items-center p-3 rounded-lg transition-all relative group
-                      ${isOpen || isMobileOpen ? "gap-3" : "justify-center"}
-                      ${isGameActive 
-                        ? "bg-secondary/10 text-secondary" 
-                        : "text-muted-foreground hover:bg-secondary/5 hover:text-secondary"}
-                    `}
-                  >
-                    <Zap className={`w-5 h-5 shrink-0 ${isGameActive ? "text-secondary" : ""}`} />
-                    {(isOpen || isMobileOpen) && (
-                      <div className="flex items-center justify-between flex-1">
-                        <span className="font-semibold text-sm">Game Management</span>
-                        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${gameMenuOpen ? "rotate-180" : ""}`} />
-                      </div>
-                    )}
-                    {isGameActive && (
-                      <div className="absolute right-0 w-1 h-6 bg-secondary rounded-l-full" />
-                    )}
-                  </button>
+        {navItems.filter(i => i.id !== "settings").map((item) => (
+          <button
+            key={item.id}
+            onClick={() => handleNavClick(item.id)}
+            className={`
+              w-full flex items-center p-3 rounded-lg transition-all relative group
+              ${isOpen || isMobileOpen ? "gap-3" : "justify-center"}
+              ${activeView === item.id 
+                ? "bg-secondary/10 text-secondary" 
+                : "text-muted-foreground hover:bg-secondary/5 hover:text-secondary"}
+            `}
+          >
+            <item.icon className={`w-5 h-5 shrink-0 ${activeView === item.id ? "text-secondary" : ""}`} />
+            {(isOpen || isMobileOpen) && <span className="font-semibold text-sm">{item.name}</span>}
+            {activeView === item.id && (
+              <div className="absolute right-0 w-1 h-6 bg-secondary rounded-l-full" />
+            )}
+          </button>
+        ))}
 
-                  {(gameMenuOpen && (isOpen || isMobileOpen)) && (
-                    <div className="mt-1 ml-4 pl-4 border-l border-secondary/10 space-y-1 animate-in slide-in-from-top-2 duration-200">
-                      {gameItems.map((subItem) => (
-                        <button
-                          key={subItem.id}
-                          onClick={() => handleNavClick(subItem.id)}
-                          className={`
-                            w-full flex items-center p-2 rounded-md text-[11px] font-bold uppercase tracking-wider transition-all
-                            ${activeView === subItem.id 
-                              ? "text-secondary bg-secondary/5" 
-                              : "text-muted-foreground hover:text-secondary hover:bg-secondary/5"}
-                          `}
-                        >
-                          {subItem.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                
+        {/* Game Engine Section */}
+        <div className="pt-4 pb-1 px-3">
+          <p className={`text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 ${(!isOpen && !isMobileOpen) ? "hidden" : "block"}`}>
+            Game Engine
+          </p>
+        </div>
+        <div>
+          <button
+            onClick={() => handleNavClick("game")}
+            className={`
+              w-full flex items-center p-3 rounded-lg transition-all relative group
+              ${isOpen || isMobileOpen ? "gap-3" : "justify-center"}
+              ${isGameActive 
+                ? "bg-secondary/10 text-secondary" 
+                : "text-muted-foreground hover:bg-secondary/5 hover:text-secondary"}
+            `}
+          >
+            <Zap className={`w-5 h-5 shrink-0 ${isGameActive ? "text-secondary" : ""}`} />
+            {(isOpen || isMobileOpen) && (
+              <div className="flex items-center justify-between flex-1">
+                <span className="font-semibold text-sm">Game Management</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${gameMenuOpen ? "rotate-180" : ""}`} />
+              </div>
+            )}
+            {isGameActive && (
+              <div className="absolute right-0 w-1 h-6 bg-secondary rounded-l-full" />
+            )}
+          </button>
+
+          {(gameMenuOpen && (isOpen || isMobileOpen)) && (
+            <div className="mt-1 ml-4 pl-4 border-l border-secondary/10 space-y-1 animate-in slide-in-from-top-2 duration-200">
+              {gameItems.map((subItem) => (
                 <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
+                  key={subItem.id}
+                  onClick={() => handleNavClick(subItem.id)}
                   className={`
-                    w-full flex items-center p-3 rounded-lg transition-all relative group
-                    ${isOpen || isMobileOpen ? "gap-3" : "justify-center"}
-                    ${activeView === item.id 
-                      ? "bg-secondary/10 text-secondary" 
-                      : "text-muted-foreground hover:bg-secondary/5 hover:text-secondary"}
+                    w-full flex items-center p-2 rounded-md text-[11px] font-bold uppercase tracking-wider transition-all
+                    ${activeView === subItem.id 
+                      ? "text-secondary bg-secondary/5" 
+                      : "text-muted-foreground hover:text-secondary hover:bg-secondary/5"}
                   `}
                 >
-                  <item.icon className={`w-5 h-5 shrink-0 ${activeView === item.id ? "text-secondary" : ""}`} />
-                  {(isOpen || isMobileOpen) && <span className="font-semibold text-sm">{item.name}</span>}
-                  {activeView === item.id && (
-                    <div className="absolute right-0 w-1 h-6 bg-secondary rounded-l-full" />
-                  )}
+                  {subItem.name}
                 </button>
-              </React.Fragment>
-            );
-          }
+              ))}
+            </div>
+          )}
+        </div>
 
-          return (
-            <button
-              key={item.id}
-              onClick={() => handleNavClick(item.id)}
-              className={`
-                w-full flex items-center p-3 rounded-lg transition-all relative group
-                ${isOpen || isMobileOpen ? "gap-3" : "justify-center"}
-                ${activeView === item.id 
-                  ? "bg-secondary/10 text-secondary" 
-                  : "text-muted-foreground hover:bg-secondary/5 hover:text-secondary"}
-              `}
-            >
-              <item.icon className={`w-5 h-5 shrink-0 ${activeView === item.id ? "text-secondary" : ""}`} />
-              {(isOpen || isMobileOpen) && <span className="font-semibold text-sm">{item.name}</span>}
-              {activeView === item.id && (
-                <div className="absolute right-0 w-1 h-6 bg-secondary rounded-l-full" />
-              )}
-            </button>
-          );
-        })}
+        {/* Subscriptions Section */}
+        <div className="pt-4 pb-1 px-3">
+          <p className={`text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 ${(!isOpen && !isMobileOpen) ? "hidden" : "block"}`}>
+            Subscriptions
+          </p>
+        </div>
+        <button
+          onClick={() => handleNavClick("subscriptions")}
+          className={`
+            w-full flex items-center p-3 rounded-lg transition-all relative group
+            ${isOpen || isMobileOpen ? "gap-3" : "justify-center"}
+            ${activeView === "subscriptions" 
+              ? "bg-secondary/10 text-secondary" 
+              : "text-muted-foreground hover:bg-secondary/5 hover:text-secondary"}
+          `}
+        >
+          <CreditCard className={`w-5 h-5 shrink-0 ${activeView === "subscriptions" ? "text-secondary" : ""}`} />
+          {(isOpen || isMobileOpen) && <span className="font-semibold text-sm">Tier Management</span>}
+          {activeView === "subscriptions" && (
+            <div className="absolute right-0 w-1 h-6 bg-secondary rounded-l-full" />
+          )}
+        </button>
+
+        {/* Settings - Always Last */}
+        {navItems.filter(i => i.id === "settings").map((item) => (
+          <button
+            key={item.id}
+            onClick={() => handleNavClick(item.id)}
+            className={`
+              w-full flex items-center p-3 rounded-lg transition-all relative group pt-6
+              ${isOpen || isMobileOpen ? "gap-3" : "justify-center"}
+              ${activeView === item.id 
+                ? "bg-secondary/10 text-secondary" 
+                : "text-muted-foreground hover:bg-secondary/5 hover:text-secondary"}
+            `}
+          >
+            <item.icon className={`w-5 h-5 shrink-0 ${activeView === item.id ? "text-secondary" : ""}`} />
+            {(isOpen || isMobileOpen) && <span className="font-semibold text-sm">{item.name}</span>}
+            {activeView === item.id && (
+              <div className="absolute right-0 w-1 h-6 bg-secondary rounded-l-full" />
+            )}
+          </button>
+        ))}
       </div>
 
       <div className="px-3 py-4 mt-auto border-t border-secondary/10 dark:border-white/5">

@@ -31,6 +31,7 @@ import { Badge } from "@/components/ui/Badge";
 import { BackButton } from "@/components/ui/BackButton";
 import { apiFetch } from "@/lib/api";
 import MemberModal from "./MemberModal";
+import { DetailsHeader } from "@/components/ui/DetailsHeader";
 
 interface GroupDetailsProps {
   id: string | number;
@@ -140,44 +141,29 @@ export default function GroupDetails({ id }: GroupDetailsProps) {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="flex items-center gap-2">
-          <BackButton href="/dashboard?view=squads" />
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-black text-foreground font-heading uppercase tracking-tight">
-                {group.group_name}
-              </h1>
-              <Badge variant={group.isSharable ? "success" : "neutral"}>
-                {group.isSharable ? "Public" : "Private"}
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground font-medium flex flex-wrap items-center gap-x-4 gap-y-1 mt-0.5">
-              <span className="flex items-center gap-1.5">
-                <Calendar className="w-3 h-3" /> Created on {new Date(group.group_created).toLocaleDateString()}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Clock className="w-3 h-3" /> Updated on {group.group_updated ? new Date(group.group_updated).toLocaleDateString() : new Date(group.group_created).toLocaleDateString()}
-              </span>
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Button variant="gradient" size="sm" className="flex-1 sm:flex-none font-bold text-[10px] uppercase">Edit Squad</Button>
-          <Button 
-            variant={group.isSharable ? "secondary" : "primary"} 
-            size="sm" 
-            className="flex-1 sm:flex-none font-bold text-[10px] uppercase gap-2"
-            onClick={handleTogglePrivacy}
-          >
-            {group.isSharable ? (
-              <>Set Private</>
-            ) : (
-              <>Set Public</>
-            )}
-          </Button>
-        </div>
-      </div>
+      <DetailsHeader
+        title={group.group_name}
+        backHref="/dashboard?view=squads"
+        badgeText={group.isSharable ? "Public" : "Private"}
+        badgeVariant={group.isSharable ? "success" : "neutral"}
+        metaItems={[
+          { icon: Calendar, label: "Created on", value: new Date(group.group_created).toLocaleDateString() },
+          { icon: Clock, label: "Updated on", value: group.group_updated ? new Date(group.group_updated).toLocaleDateString() : new Date(group.group_created).toLocaleDateString() },
+        ]}
+        actions={[
+          {
+            label: "Edit Squad",
+            icon: Edit2,
+            variant: "gradient"
+          },
+          {
+            label: group.isSharable ? "Set Private" : "Set Public",
+            icon: Shield,
+            variant: group.isSharable ? "secondary" : "primary",
+            onClick: handleTogglePrivacy
+          }
+        ]}
+      />
 
       {/* Tabs */}
       <div className="flex items-center gap-1 p-1 bg-secondary/5 rounded-2xl w-full sm:w-fit border border-secondary/10 overflow-x-auto custom-scrollbar no-scrollbar">

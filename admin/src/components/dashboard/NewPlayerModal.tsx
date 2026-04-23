@@ -337,6 +337,7 @@ export default function NewPlayerModal({ isOpen, onClose, onSuccess }: NewPlayer
                 placeholder="Enter unique username..."
                 value={formData.username}
                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                maxLength={20}
                 rightElement={
                   <div className="mr-2">
                     {usernameStatus === 'checking' && <RefreshCw className="w-4 h-4 text-secondary animate-spin" />}
@@ -354,6 +355,7 @@ export default function NewPlayerModal({ isOpen, onClose, onSuccess }: NewPlayer
                 placeholder="Enter player email..."
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                maxLength={100}
               />
               <PasswordField
                 label="Temporary Password"

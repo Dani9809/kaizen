@@ -1,4 +1,4 @@
-import { IsString, IsBoolean, IsArray, ValidateNested, IsInt, IsEnum } from 'class-validator';
+import { IsString, IsBoolean, IsArray, ValidateNested, IsInt, IsEnum, MaxLength, Matches, IsNotEmpty } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class GroupMemberDto {
@@ -11,6 +11,9 @@ export class GroupMemberDto {
 
 export class CreateGroupDto {
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(40)
+  @Matches(/^[a-zA-Z0-9_ -]+$/, { message: 'Squad name can only contain alphanumeric characters, underscores, hyphens, and spaces' })
   name: string;
 
   @IsBoolean()

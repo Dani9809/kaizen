@@ -28,15 +28,31 @@ export class AdminService {
     };
   }
 
-  async getAllUsers() {
-    return this.prisma.account.findMany({
-      where: { type: { type_name: 'User' } },
-      include: {
-        status: true,
-        tier: true,
-      },
-      orderBy: { account_created: 'desc' }
-    });
+  async getAllUsers(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.account.findMany({
+        where: { type: { type_name: 'User' } },
+        include: {
+          status: true,
+          tier: true,
+        },
+        orderBy: { account_created: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.account.count({
+        where: { type: { type_name: 'User' } }
+      })
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    };
   }
 
   async updateUserStatus(accountId: number, statusId: number) {
@@ -133,8 +149,16 @@ export class AdminService {
 
     const updateData: any = { ...dto };
     
+    if (updateData.username) {
+      updateData.username = this.sanitizeString(updateData.username);
+    }
+
+    if (updateData.email) {
+      updateData.email = updateData.email.toLowerCase().trim();
+    }
+    
     if (dto.password) {
-      const username = dto.username || currentUser.username;
+      const username = updateData.username || currentUser.username;
       updateData.password = await bcrypt.hash(dto.password + username, 12);
     }
 
@@ -189,13 +213,16 @@ export class AdminService {
       throw new ConflictException('Username or email already exists');
     }
 
+    const sanitizedUsername = this.sanitizeString(dto.username);
+    const sanitizedEmail = dto.email.toLowerCase().trim();
+
     // Rule: 12 rounds with username
-    const hashedPassword = await bcrypt.hash(dto.password + dto.username, 12);
+    const hashedPassword = await bcrypt.hash(dto.password + sanitizedUsername, 12);
 
     return this.prisma.account.create({
       data: {
-        username: dto.username,
-        email: dto.email,
+        username: sanitizedUsername,
+        email: sanitizedEmail,
         password: hashedPassword,
         type_id: dto.type_id,
         account_status_id: dto.account_status_id,
@@ -213,22 +240,40 @@ export class AdminService {
     });
   }
 
-  async getAllGroups() {
-    return this.prisma.group.findMany({
-      include: {
-        _count: {
-          select: { members: true }
-        }
-      },
-      orderBy: { group_created: 'desc' }
-    });
+  async getAllGroups(page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.group.findMany({
+        include: {
+          _count: {
+            select: { members: true }
+          }
+        },
+        orderBy: { group_created: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.group.count()
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    };
   }
 
   async updateGroup(id: number, data: any) {
-    // Force Prisma client reload
+    const updateData = { ...data };
+    if (updateData.group_name) {
+      updateData.group_name = this.sanitizeString(updateData.group_name);
+    }
+
     return this.prisma.group.update({
       where: { group_id: id },
-      data
+      data: updateData
     });
   }
 
@@ -307,16 +352,13 @@ export class AdminService {
 
   async createGroup(dto: CreateGroupDto) {
     const { name, isSharable, members } = dto;
-    console.log('Creating group with data:', JSON.stringify(dto));
 
     // Validation
     const ownerCount = members.filter(m => m.role_name === 'Owner').length;
     if (ownerCount !== 1) {
-      console.error('Validation failed: Exactly one Owner is required');
       throw new Error('Exactly one Owner is required');
     }
     if (members.length < 2) {
-      console.error('Validation failed: A squad must have at least 2 members');
       throw new Error('A squad must have at least 2 members');
     }
 
@@ -325,13 +367,12 @@ export class AdminService {
         // 1. Create Group
         const group = await tx.group.create({
           data: {
-            group_name: name,
+            group_name: this.sanitizeString(name),
             isSharable: !!isSharable,
             group_streak: 0,
             longest_streak: 0,
           }
         });
-        console.log('Group created with ID:', group.group_id);
 
         // 2. Fetch Role IDs
         const roles = await tx.role.findMany();
@@ -340,15 +381,13 @@ export class AdminService {
           return acc;
         }, {} as Record<string, number>);
 
-        // 3. Create Group Members (Loop instead of createMany for better error handling)
+        // 3. Create Group Members
         for (const member of members) {
           const roleId = roleMap[member.role_name];
           if (!roleId) {
             throw new Error(`Role "${member.role_name}" not found in database`);
           }
 
-          console.log(`Adding member ${member.account_id} with role ${member.role_name} (${roleId})`);
-          
           await tx.groupMember.create({
             data: {
               group_id: group.group_id,
@@ -359,11 +398,9 @@ export class AdminService {
           });
         }
 
-        console.log('Successfully created group and all members');
         return group;
       });
     } catch (error) {
-      console.error('Error in createGroup transaction:', error.message, error.stack);
       throw error;
     }
   }
@@ -373,7 +410,6 @@ export class AdminService {
   }
 
   async addGroupMember(groupId: number, accountId: number, roleId: number) {
-    // ... (logic remains same, calling the new bulk method internally or just keeping it for single adds)
     return this.bulkAddGroupMembers(groupId, [{ account_id: accountId, role_id: roleId }]);
   }
 
@@ -447,6 +483,76 @@ export class AdminService {
   async removeGroupMember(memberId: number) {
     return this.prisma.groupMember.delete({
       where: { group_member_id: memberId }
+    });
+  }
+
+  private sanitizeString(str: string): string {
+    if (!str) return str;
+    let sanitized = str.replace(/<[^>]*>?/gm, '');
+    sanitized = sanitized.replace(/[;`$()|&><]/g, '');
+    return sanitized.trim();
+  }
+
+  async getAllSubscriptionTiers() {
+    return this.prisma.subscriptionTier.findMany({
+      orderBy: { subscription_tier_id: 'asc' }
+    });
+  }
+
+  async createSubscriptionTier(dto: any) {
+    if (dto.subscription_tier_name) {
+      dto.subscription_tier_name = this.sanitizeString(dto.subscription_tier_name);
+    }
+    return this.prisma.subscriptionTier.create({
+      data: dto
+    });
+  }
+
+  async updateSubscriptionTier(id: number, dto: any) {
+    if (dto.subscription_tier_name) {
+      dto.subscription_tier_name = this.sanitizeString(dto.subscription_tier_name);
+    }
+    return this.prisma.subscriptionTier.update({
+      where: { subscription_tier_id: id },
+      data: dto
+    });
+  }
+
+  async deleteSubscriptionTier(id: number) {
+    if (id === 1) {
+      throw new Error("Cannot delete the default Free tier");
+    }
+    return this.prisma.subscriptionTier.delete({
+      where: { subscription_tier_id: id }
+    });
+  }
+
+  async getAllMoods() {
+    return this.prisma.mood.findMany({
+      orderBy: { mood_id: 'asc' }
+    });
+  }
+
+  async createMood(dto: any) {
+    dto.mood_label = this.sanitizeString(dto.mood_label);
+    dto.mood_description = this.sanitizeString(dto.mood_description);
+    return this.prisma.mood.create({
+      data: dto
+    });
+  }
+
+  async updateMood(id: number, dto: any) {
+    if (dto.mood_label) dto.mood_label = this.sanitizeString(dto.mood_label);
+    if (dto.mood_description) dto.mood_description = this.sanitizeString(dto.mood_description);
+    return this.prisma.mood.update({
+      where: { mood_id: id },
+      data: dto
+    });
+  }
+
+  async deleteMood(id: number) {
+    return this.prisma.mood.delete({
+      where: { mood_id: id }
     });
   }
 }

@@ -31,6 +31,7 @@ const viewNames: Record<string, string> = {
   settings: "Settings",
   squads: "Squad Base",
   game: "In Game Management",
+  subscriptions: "Subscriptions",
 };
 
 export const Header = ({ admin, onMenuClick }: HeaderProps) => {

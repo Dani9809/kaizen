@@ -9,6 +9,7 @@ import GroupManagement from "@/features/groups/components/GroupManagement";
 import GroupDetails from "@/features/groups/components/GroupDetails";
 import GameOverview from "@/features/gamification/components/GameOverview";
 import GameManagement from "@/features/gamification/components/GameManagement";
+import SubscriptionManagement from "@/features/subscriptions/components/SubscriptionManagement";
 
 import PlayerDetails from "@/features/players/components/PlayerDetails";
 
@@ -46,6 +47,8 @@ function DashboardContent() {
       return <Overview />;
     case "settings":
       return <Settings />;
+    case "subscriptions":
+      return <SubscriptionManagement />;
     default:
       return <Overview />;
   }
